@@ -36,11 +36,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation ("javax.xml.bind:jaxb-api:2.3.1")
-
-//    implementation("org.springframework.boot:spring-boot-starter-auth")
+    implementation("javax.xml.bind:jaxb-api:2.3.1")
     implementation("io.jsonwebtoken:jjwt:0.2")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     compileOnly("org.projectlombok:lombok")
@@ -53,12 +50,6 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation(kotlin("stdlib"))
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
-//    implementation("org.webjars:swagger-ui:4.1.3")
-//    implementation("org.springdoc:springdoc-openapi-ui:1.6.14")
-//    implementation("org.springdoc:springdoc-openapi-ui:1.6.14")
-//    implementation("org.springdoc:springdoc-openapi-webflux-core:1.6.14")
-//    implementation("org.springdoc:springdoc-openapi-ui:2.1.0")
-//    implementation("io.springfox:springfox-boot-starter:3.0.0")
 
 }
 

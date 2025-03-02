@@ -14,7 +14,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-//import pbs.agile.webapi.middleware.*
 
 @Configuration
 class SecurityConfig(
@@ -27,11 +26,12 @@ class SecurityConfig(
         return http
             .csrf { it.disable() }
             .authorizeHttpRequests {
-                it.requestMatchers( "/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                it.requestMatchers( "/login**", "/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 it.anyRequest().authenticated()
             }
 //            .formLogin(Customizer.withDefaults())
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+            .httpBasic { }
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)
             .build()
     }

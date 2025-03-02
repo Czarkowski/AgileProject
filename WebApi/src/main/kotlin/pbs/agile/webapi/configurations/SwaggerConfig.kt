@@ -1,39 +1,4 @@
-package pbs.agile.webapi.configurations//import org.springframework.context.annotation.Bean
-//import org.springframework.context.annotation.Configuration
-//import springfox.documentation.builders.PathSelectors
-//import springfox.documentation.builders.RequestHandlerSelectors
-//import springfox.documentation.spi.DocumentationType
-//import springfox.documentation.spring.web.plugins.Docket
-//import springfox.documentation.swagger2.annotations.EnableSwagger2
-//
-//@Configuration
-//@EnableSwagger2
-//class pbs.agile.webapi.configurations.SwaggerConfig {
-//    @Bean
-//    fun api(): Docket {
-//        return Docket(DocumentationType.SWAGGER_2)
-//            .select()
-//            .apis(RequestHandlerSelectors.any())
-//            .paths(PathSelectors.any())
-//            .build()
-//    }
-//}
-
-//import org.springframework.context.annotation.Bean
-//import org.springframework.context.annotation.Configuration
-//import org.springdoc.core.GroupedOpenApi
-//
-//@Configuration
-//class pbs.agile.webapi.configurations.SwaggerConfig {
-//    @Bean
-//    fun customApi(): GroupedOpenApi {
-//        return GroupedOpenApi.builder()
-//            .group("custom-api")
-//            .pathsToMatch("/api/**") // Zmień na swoje ścieżki
-//            .build()
-//    }
-//}
-//
+package pbs.agile.webapi.configurations
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.models.Components
@@ -41,7 +6,6 @@ import io.swagger.v3.oas.models.OpenAPI
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
-import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.security.SecurityRequirement
 import io.swagger.v3.oas.models.security.SecurityScheme
 import org.springdoc.core.models.GroupedOpenApi
@@ -69,9 +33,15 @@ class SwaggerConfig : WebMvcConfigurer {
                             .scheme("bearer")
                             .bearerFormat("JWT")
                     )
+                    .addSecuritySchemes("basicAuth",
+                        SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("basic")
+                    )
             )
             .addSecurityItem(
                 SecurityRequirement().addList("bearerAuth")
+            )
+            .addSecurityItem(
+                SecurityRequirement().addList("basicAuth")
             )
     }
 }
