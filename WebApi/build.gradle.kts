@@ -1,0 +1,80 @@
+plugins {
+    kotlin("jvm") version "1.9.25"
+    kotlin("plugin.spring") version "1.9.25"
+    id("org.springframework.boot") version "3.4.3"
+    id("io.spring.dependency-management") version "1.1.7"
+    kotlin("plugin.jpa") version "1.9.25" // Zaktualizowana wersja
+}
+
+group = "pbs.agile"
+version = "0.0.1-SNAPSHOT"
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = "21" // Ustaw JVM 17
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom(configurations.annotationProcessor.get())
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation ("javax.xml.bind:jaxb-api:2.3.1")
+
+//    implementation("org.springframework.boot:spring-boot-starter-auth")
+    implementation("io.jsonwebtoken:jjwt:0.2")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    compileOnly("org.projectlombok:lombok")
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+    runtimeOnly("org.postgresql:postgresql")
+    annotationProcessor("org.projectlombok:lombok")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    testImplementation("org.springframework.security:spring-security-test")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation(kotlin("stdlib"))
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
+//    implementation("org.webjars:swagger-ui:4.1.3")
+//    implementation("org.springdoc:springdoc-openapi-ui:1.6.14")
+//    implementation("org.springdoc:springdoc-openapi-ui:1.6.14")
+//    implementation("org.springdoc:springdoc-openapi-webflux-core:1.6.14")
+//    implementation("org.springdoc:springdoc-openapi-ui:2.1.0")
+//    implementation("io.springfox:springfox-boot-starter:3.0.0")
+
+}
+
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.addAll("-Xjsr305=strict")
+    }
+}
+
+allOpen {
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Embeddable")
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
+
