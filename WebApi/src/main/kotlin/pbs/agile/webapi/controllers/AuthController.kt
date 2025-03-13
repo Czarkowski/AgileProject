@@ -25,25 +25,28 @@ class AuthController(
         if (userRepository.findByUsername(request.username) != null) {
             return ResponseEntity.badRequest().body("User already exists")
         }
-//        User(
-//            Username = "dsfingu"
-//        )
         val user = User(
             username = request.username,
             password = passwordEncoder.encode(request.password),
-            email = request.email
+            email = request.email,
+            first_name = request.first_name,
+            last_name = request.last_name
         )
-        userRepository.save(user)
-        return ResponseEntity.ok("User registered successfully")
+        return try {
+            userRepository.save(user)
+            ResponseEntity.ok("User registered successfully")
+        } catch (e: Exception){
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: ${e.message}")
+        }
     }
 
     @PostMapping("/login")
     fun login(@RequestBody request: LoginRequest): ResponseEntity<String> {
         return try {
             val authentication = authenticationManager.authenticate(
-                UsernamePasswordAuthenticationToken(request.username, request.password)
+                UsernamePasswordAuthenticationToken(request.identifier, request.password)
             )
-            val token = jwtUtil.generateToken(request.username)
+            val token = jwtUtil.generateToken(request.identifier)
             ResponseEntity.ok(token)
         } catch (e: AuthenticationException) {
             ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials")
@@ -51,5 +54,5 @@ class AuthController(
     }
 }
 
-data class RegisterRequest(val username: String, val password: String, val email: String)
-data class LoginRequest(val username: String, val password: String)
+data class RegisterRequest(val username: String, val password: String, val email: String, val first_name: String, val last_name: String)
+data class LoginRequest(val identifier: String, val password: String)

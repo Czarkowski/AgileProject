@@ -15,9 +15,9 @@ class UserController(@Autowired private val userService: UserService) {
     @GetMapping("/{username}")
     fun getUserByUsername(@PathVariable username: String): UserDto? = userService.getUserByUsername(username)
 
-    @PostMapping
-    fun createUser(@RequestBody user: UserDto): UserDto = userService.saveUser(user)
-
-    @DeleteMapping("/{id}")
-    fun deleteUser(@PathVariable id: Long) = userService.deleteUser(id)
+//    @PostMapping
+//    fun createUser(@RequestBody user: UserDto): UserDto = userService.saveUser(user)
+//
+//    @DeleteMapping("/{id}")
+//    fun deleteUser(@PathVariable id: Long) = userService.deleteUser(id)
 }

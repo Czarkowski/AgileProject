@@ -1,8 +1,11 @@
 package pbs.agile.webapi.models.entities
 
+import kotlin.collections.*
 import jakarta.persistence.*
+import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
+import org.hibernate.internal.util.collections.CollectionHelper.listOf
 
 @Entity
 @Table(name = "Users")
@@ -22,13 +25,25 @@ data class User(
     val password: String,
 
     @field:NotNull
-    @Column(nullable = false)
-    val email: String
+    @field:Email
+    @Column(nullable = false, unique = true)
+    val email: String,
+
+    @field:NotNull
+    @field:Size(min = 2, max = 50)
+    @Column(nullable = false, unique = false)
+    val first_name: String,
+
+    @field:NotNull
+    @field:Size(min = 2, max = 50)
+    @Column(nullable = false, unique = false)
+    val last_name: String,
+
+    @ManyToMany(mappedBy = "users")
+    val projects: MutableList<Project> = listOf<Project>(),
 ) {
-    constructor(username: String, password: String, email: String) : this(null, username, password, email){
+    constructor(username: String, password: String, email: String, first_name: String, last_name: String) : this(null, username, password, email, first_name, last_name){
 
     }
-    constructor() : this(null, "user_name", "password", "") {
-
-    }
+    constructor() : this(null, "user_name", "password", "", "", "")
 }
