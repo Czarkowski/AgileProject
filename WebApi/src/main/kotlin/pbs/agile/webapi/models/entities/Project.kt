@@ -23,6 +23,10 @@ data class Project(
     @Column(nullable = false, unique = false)
     var description: String,
 
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = true)
+    var owner: User?,
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinTable(
         name = "project_users",
@@ -32,5 +36,5 @@ data class Project(
     var users: MutableList<User> = listOf<User>(),
 )
 {
-    constructor(): this(null, "", "")
+    constructor(): this(null, "", "", null)
 }

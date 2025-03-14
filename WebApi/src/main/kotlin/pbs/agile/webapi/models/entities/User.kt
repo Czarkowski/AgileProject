@@ -41,6 +41,10 @@ data class User(
 
     @ManyToMany(mappedBy = "users")
     val projects: MutableList<Project> = listOf<Project>(),
+
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    val ownedProjects: MutableList<Project> = listOf()
+
 ) {
     constructor(username: String, password: String, email: String, first_name: String, last_name: String) : this(null, username, password, email, first_name, last_name){
 
