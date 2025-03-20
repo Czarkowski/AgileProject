@@ -15,6 +15,7 @@ import java.util.*
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = ["http://localhost:5173"])
 class AuthController(
     private val authenticationManager: AuthenticationManager,
     private val userDetailsService: AuthUserDetailsService,
