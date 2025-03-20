@@ -16,17 +16,24 @@
 import * as runtime from '../runtime';
 import type {
   LoginRequest,
+  RefreshTokenRequest,
   RegisterRequest,
 } from '../models/index';
 import {
     LoginRequestFromJSON,
     LoginRequestToJSON,
+    RefreshTokenRequestFromJSON,
+    RefreshTokenRequestToJSON,
     RegisterRequestFromJSON,
     RegisterRequestToJSON,
 } from '../models/index';
 
 export interface LoginOperationRequest {
     loginRequest: LoginRequest;
+}
+
+export interface RefreshTokenOperationRequest {
+    refreshTokenRequest: RefreshTokenRequest;
 }
 
 export interface RegisterOperationRequest {
@@ -40,7 +47,7 @@ export class AuthControllerApi extends runtime.BaseAPI {
 
     /**
      */
-    async loginRaw(requestParameters: LoginOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<string>> {
+    async loginRaw(requestParameters: LoginOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
         if (requestParameters['loginRequest'] == null) {
             throw new runtime.RequiredError(
                 'loginRequest',
@@ -65,7 +72,6 @@ export class AuthControllerApi extends runtime.BaseAPI {
                 headerParameters["Authorization"] = `Bearer ${tokenString}`;
             }
         }
-        console.log(requestParameters)
         const response = await this.request({
             path: `/auth/login`,
             method: 'POST',
@@ -74,17 +80,58 @@ export class AuthControllerApi extends runtime.BaseAPI {
             body: LoginRequestToJSON(requestParameters['loginRequest']),
         }, initOverrides);
 
-        if (this.isJsonMime(response.headers.get('content-type'))) {
-            return new runtime.JSONApiResponse<string>(response);
-        } else {
-            return new runtime.TextApiResponse(response) as any;
-        }
+        return new runtime.JSONApiResponse<any>(response);
     }
 
     /**
      */
-    async login(requestParameters: LoginOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<string> {
+    async login(requestParameters: LoginOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
         const response = await this.loginRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async refreshTokenRaw(requestParameters: RefreshTokenOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters['refreshTokenRequest'] == null) {
+            throw new runtime.RequiredError(
+                'refreshTokenRequest',
+                'Required parameter "refreshTokenRequest" was null or undefined when calling refreshToken().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
+            headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
+        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/auth/refresh`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: RefreshTokenRequestToJSON(requestParameters['refreshTokenRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     */
+    async refreshToken(requestParameters: RefreshTokenOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
+        const response = await this.refreshTokenRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

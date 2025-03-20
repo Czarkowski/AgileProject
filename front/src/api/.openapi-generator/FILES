@@ -1,4 +1,3 @@
-.openapi-generator-ignore
 apis/AuthControllerApi.ts
 apis/ExampleAPIApi.ts
 apis/ProjectControllerApi.ts
@@ -9,6 +8,7 @@ models/LoginRequest.ts
 models/ProjectDto.ts
 models/ProjectRequest.ts
 models/ProjectUpdateRequest.ts
+models/RefreshTokenRequest.ts
 models/RegisterRequest.ts
 models/UserAndProjectRequest.ts
 models/UserDto.ts
