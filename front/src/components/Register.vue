@@ -1,13 +1,12 @@
 <script>
 export default {
-  NAME: "Test"
+  NAME: "Register"
 }
 </script>
 
 <template>
-  <div class="test">
-    TEST
-  </div>
+  <div class="test">REJESTRACJA</div>
+
 </template>
 
 <style scoped>
