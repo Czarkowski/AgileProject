@@ -1,4 +1,23 @@
 <script setup>
+
+import { ref, onMounted } from 'vue';
+import { UsersApi } from '@/api';  // Dostosuj ścieżkę do wygenerowanej klasy API
+import type { UserDto } from '@/api'; // Importuj typy wygenerowane przez OpenAPI, jeśli są dostępne
+
+// Tworzymy zmienną do przechowywania danych użytkowników
+const users = ref<UserDto[]>([]);
+
+// Wywołanie metody API po załadowaniu komponentu
+onMounted(async () => {
+  try {
+    const api = new UsersApi(); // Inicjalizacja klienta API
+    const response = await api.getAllUsers(); // Wywołanie metody getAllUsers
+    users.value = response.data; // Zakładając, że odpowiedź zawiera dane użytkowników
+  } catch (error) {
+    console.error('Error fetching users:', error);
+  }
+});
+
 defineProps({
   msg: {
     type: String,

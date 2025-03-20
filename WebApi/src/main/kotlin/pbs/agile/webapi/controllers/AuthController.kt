@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.*
 import pbs.agile.webapi.auth.JwtUtil
 import pbs.agile.webapi.models.entities.User
 import pbs.agile.webapi.repositories.UserRepository
+import java.sql.DriverManager.println
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = ["http://localhost:5173"])
 class AuthController(
     private val authenticationManager: AuthenticationManager,
     private val userRepository: UserRepository,
@@ -42,6 +44,7 @@ class AuthController(
 
     @PostMapping("/login")
     fun login(@RequestBody request: LoginRequest): ResponseEntity<String> {
+        println(request.identifier)
         return try {
             val authentication = authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken(request.identifier, request.password)

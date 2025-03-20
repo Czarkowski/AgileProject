@@ -20,7 +20,9 @@
 </template>
 
 <script>
+import { AuthControllerApi } from '/src/api';  // Import wygenerowanego klienta API, dostosuj ścieżkę
 export default {
+  
   data() {
     return {
       email: '',
@@ -28,9 +30,25 @@ export default {
     };
   },
   methods: {
-    handleLogin() {
+    async handleLogin() {
       console.log("Email:", this.email, "Hasło:", this.password);
       // Tutaj można dodać obsługę logowania np. wysyłanie żądania do backendu
+      try {
+        // Tworzymy instancję klienta API
+        const api = new AuthControllerApi();
+        console.log(api)
+        // Wywołujemy metodę logowania, przekazując email i password
+        const response = await api.login({loginRequest: { identifier: this.email, password: this.password }});
+
+        // Jeśli logowanie się uda, przechowujemy token JWT w localStorage
+        localStorage.setItem('accessToken', response.data.accessToken);
+
+        // Tutaj możesz zrobić przekierowanie do innej strony po udanym logowaniu
+        this.$router.push('/dashboard');  // Przykład przekierowania do dashboardu
+      } catch (error) {
+        console.error('Błąd logowania:', error);
+        // Obsłuż błąd logowania (np. wyświetl komunikat użytkownikowi)
+      }
     }
   }
 };

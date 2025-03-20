@@ -4,6 +4,7 @@ plugins {
     id("org.springframework.boot") version "3.4.3"
     id("io.spring.dependency-management") version "1.1.7"
     kotlin("plugin.jpa") version "1.9.25" // Zaktualizowana wersja
+    id("org.openapi.generator") version "7.2.0"
 }
 
 group = "pbs.agile"
@@ -50,7 +51,7 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation(kotlin("stdlib"))
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
-
+//    implementation("org.springdoc:springdoc-openapi-ui:1.8.0")
 }
 
 kotlin {
@@ -69,3 +70,15 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
+//openApiGenerate {
+//    generatorName.set("typescript-fetch") // Możesz zmienić na np. "typescript-angular" lub "typescript-axios"
+//    inputSpec.set("$rootDir/src/main/resources/openapi.yaml") // Ścieżka do pliku OpenAPI
+//    outputDir.set("$buildDir/generated") // Katalog, gdzie wygenerowane będą pliki
+//    apiPackage.set("com.example.api") // Pakiet API (jeśli generujesz też klienta)
+//    modelPackage.set("com.example.model") // Pakiet modeli
+//    typeMappings.set(mapOf("LocalDateTime" to "string")) // Opcjonalne mapowania typów
+//}
+//
+//tasks.named("compileKotlin") {
+//    dependsOn("openApiGenerate")
+//}
