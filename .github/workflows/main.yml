@@ -3,7 +3,7 @@ name: Build Spring Boot & Vue App
 on:
   push:
     branches:
-      - '*'
+      - main
   pull_request:
     branches:
       - main
@@ -34,7 +34,7 @@ jobs:
 
       - name: Build Spring Boot application
         run: |
-          cd backend
+          cd WebApi
           ./gradlew clean build
 
       - name: Set up Node.js
@@ -46,6 +46,6 @@ jobs:
 
       - name: Install dependencies & build Vue app
         run: |
-          cd frontend
+          cd front
           npm install
           npm run build
