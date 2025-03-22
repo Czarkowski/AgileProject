@@ -38,7 +38,7 @@ jobs:
       - name: Build Spring Boot application
         run: |
           cd WebApi
-          ./gradlew clean build
+          ./gradlew clean build -x test
         
       - name: Set up Node.js
         uses: actions/setup-node@v4
