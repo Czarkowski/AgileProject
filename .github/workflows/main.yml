@@ -31,12 +31,15 @@ jobs:
           key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             gradle-${{ runner.os }}-
-
+            
+      - name: Give execute permission to gradlew
+        run: chmod +x WebApi/gradlew
+        
       - name: Build Spring Boot application
         run: |
           cd WebApi
           ./gradlew clean build
-
+        
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
