@@ -14,7 +14,7 @@
         <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition">
           Zaloguj się
         </button>
-        <div class="register-link" @click="goToRegister">
+        <div class="links" @click="goToRegister">
           Rejestracja test
         </div>
       </form>
@@ -45,13 +45,4 @@ export default {
 </script>
 <style scoped>
 
-.register-link{
-  color:#282828;
-  text-decoration: underline;
-}
-
-.register-link:hover{
-  color: blue;
-  text-decoration: underline;
-}
 </style>
