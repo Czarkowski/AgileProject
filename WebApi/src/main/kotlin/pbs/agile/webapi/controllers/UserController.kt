@@ -15,15 +15,15 @@ class UserController(@Autowired private val userService: UserService) {
     @GetMapping("/{username}")
     fun getUserByUsername(@PathVariable username: String): UserDto? = userService.getUserByUsername(username)
 
-    @PostMapping("/login")
-    fun login(@RequestBody loginRequest: LoginRequest): UserDto? {
-        return userService.loginUser(loginRequest.usernameOrEmail, loginRequest.password)
-    }
+    // @PostMapping("/login")
+    // fun login(@RequestBody loginRequest: LoginRequest): UserDto? {
+    //     return userService.loginUser(loginRequest.usernameOrEmail, loginRequest.password)
+    // }
 
-    @PostMapping("/register")
-    fun register(@RequestBody userDto: UserDto): UserDto {
-        return userService.saveUser(userDto)
-    }
+    // @PostMapping("/register")
+    // fun register(@RequestBody userDto: UserDto): UserDto {
+    //     return userService.saveUser(userDto)
+    // }
 
 //    @PostMapping
 //    fun createUser(@RequestBody user: UserDto): UserDto = userService.saveUser(user)
