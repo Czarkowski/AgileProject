@@ -1,21 +1,22 @@
 <template>
-  <div class="flex items-center justify-center h-screen bg-gray-100">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-96">
-      <h2 class="text-2xl font-bold text-center mb-6">Logowanie</h2>
+  <div class="flex items-center justify-center h-screen bg-gradient-to-r from-purple-500 to-pink-500">
+    <div class="bg-white p-8 rounded-xl shadow-xl w-96 max-w-md">
+      <h2 class="text-3xl font-bold text-center mb-6 text-gray-800">Logowanie</h2>
       <form @submit.prevent="handleLogin">
-        <div class="mb-4">
-          <label for="email" class="block text-gray-700">Email</label>
-          <input v-model="email" type="email" id="email" class="w-full p-2 border rounded mt-1" required />
+        <div class="mb-6">
+          <label for="email" class="block text-gray-700 text-sm font-medium">Email</label>
+          <input v-model="email" type="email" id="email" class="w-full p-3 border border-gray-300 rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-purple-500" required />
         </div>
-        <div class="mb-4">
-          <label for="password" class="block text-gray-700">Hasło</label>
-          <input v-model="password" type="password" id="password" class="w-full p-2 border rounded mt-1" required />
+        <div class="mb-6">
+          <label for="password" class="block text-gray-700 text-sm font-medium">Hasło</label>
+          <input v-model="password" type="password" id="password" class="w-full p-3 border border-gray-300 rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-purple-500" required />
         </div>
-        <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition">
+        <button type="submit" class="w-full bg-purple-600 text-white py-3 rounded-md hover:bg-purple-700 transition duration-300 transform hover:scale-105">
           Zaloguj się
         </button>
-        <div class="links" @click="goToRegister">
-          Rejestracja test
+        <div class="text-center mt-4">
+          <span class="text-sm text-gray-600">Nie masz konta? </span>
+          <a href="#" @click="goToRegister" class="text-purple-600 hover:underline">Zarejestruj się</a>
         </div>
       </form>
     </div>
@@ -26,23 +27,118 @@
 export default {
   data() {
     return {
-      NAME: "Login",
       email: '',
       password: ''
     };
   },
   methods: {
-    handleLogin() {
-      console.log("Email:", this.email, "Hasło:", this.password);
-      // Tutaj można dodać obsługę logowania np. wysyłanie żądania do backendu
-    },
+    async handleLogin() {
+      try {
+        const response = await axios.post('/api/users/login', {
+          usernameOrEmail: this.usernameOrEmail,
+          password: this.password,
+        });
 
-    goToRegister(){
-      this.$router.push('/register');
+        // Jeśli logowanie się powiedzie, możesz zapisać dane użytkownika (np. token lub dane sesji)
+        if (response && response.data) {
+          console.log('Zalogowano pomyślnie:', response.data);
+          // Może tu być np. zapisanie tokenu w localStorage lub Vuex
+          this.$router.push('/dashboard'); // Przekierowanie po zalogowaniu
+        }
+      } catch (error) {
+        console.error('Błąd logowania:', error);
+        alert('Nie udało się zalogować. Sprawdź swoje dane logowania.');
+      }
     },
+    
+    goToRegister() {
+      this.$router.push('/register');
+    }
   }
 };
 </script>
-<style scoped>
 
+<style scoped>
+/* Stylowanie głównego kontenera */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+/* Stylizacja formularza */
+.login-box {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+/* Nagłówek */
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Pola formularza */
+.input-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.input-group label {
+  font-size: 14px;
+  color: #555;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* Przycisk logowania */
+.login-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #764ba2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.login-button:hover {
+  background-color: #5a3e91;
+}
+
+/* Przekierowanie do rejestracji */
+.redirect-text {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #555;
+}
+
+.register-link {
+  color: #764ba2;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.register-link:hover {
+  text-decoration: underline;
+}
 </style>
