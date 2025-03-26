@@ -7,3 +7,7 @@ data class ProjectUpdateRequest(
     val title: String,
     val description: String
 )
+data class LoginRequest(
+    val usernameOrEmail: String,
+    val password: String
+)
