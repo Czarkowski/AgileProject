@@ -23,7 +23,10 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { LoginRequest } from '@/api/models/LoginRequest';
+import { UserControllerApi } from '@/api/apis/UserControllerApi';
+
 export default {
   data() {
     return {
@@ -34,16 +37,19 @@ export default {
   methods: {
     async handleLogin() {
       try {
-        const response = await axios.post('/api/users/login', {
-          usernameOrEmail: this.usernameOrEmail,
+        const loginRequest: LoginRequest = {
+          identifier: this.email,
           password: this.password,
-        });
+        };
 
-        // Jeśli logowanie się powiedzie, możesz zapisać dane użytkownika (np. token lub dane sesji)
-        if (response && response.data) {
-          console.log('Zalogowano pomyślnie:', response.data);
-          // Może tu być np. zapisanie tokenu w localStorage lub Vuex
-          this.$router.push('/dashboard'); // Przekierowanie po zalogowaniu
+        const userApi = new UserControllerApi();
+
+        const userResponse = await userApi.getUserByUsername({ username: this.email });
+
+        if (userResponse) {
+          console.log('Zalogowano pomyślnie:', userResponse);
+
+          this.$router.push('/dashboard');
         }
       } catch (error) {
         console.error('Błąd logowania:', error);
