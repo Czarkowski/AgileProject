@@ -5,27 +5,27 @@
       <form @submit.prevent="handleRegister">
         <div class="input-group">
           <label for="username">Nazwa użytkownika</label>
-          <input v-model="username" type="text" id="username" required />
+          <input v-model="form.username" type="text" id="username" required />
         </div>
         <div class="input-group">
           <label for="email">Email</label>
-          <input v-model="email" type="email" id="email" required />
+          <input v-model="form.email" type="email" id="email" required />
         </div>
         <div class="input-group">
           <label for="password">Hasło</label>
-          <input v-model="password" type="password" id="password" required />
+          <input v-model="form.password" type="password" id="password" required />
         </div>
         <div class="input-group">
           <label for="confirmPassword">Potwierdź hasło</label>
-          <input v-model="confirmPassword" type="password" id="confirmPassword" required />
+          <input v-model="form.confirmPassword" type="password" id="confirmPassword" required />
         </div>
         <div class="input-group">
           <label for="first_name">Imię</label>
-          <input v-model="first_name" type="text" id="first_name" required />
+          <input v-model="form.firstName" type="text" id="first_name" required />
         </div>
         <div class="input-group">
           <label for="last_name">Nazwisko</label>
-          <input v-model="last_name" type="text" id="last_name" required />
+          <input v-model="form.lastName" type="text" id="last_name" required />
         </div>
         <button type="submit" class="register-button">Zarejestruj się</button>
       </form>
@@ -37,51 +37,57 @@
   </div>
 </template>
 
-<script>
-import axios from 'axios';
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { RegisterRequest, RegisterRequestToJSON } from '@/api/models/RegisterRequest';
 
-export default {
-  data() {
-    return {
-      username: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-      first_name: '',
-      last_name: '',
-    };
-  },
-  methods: {
-    async handleRegister() {
-      if (this.password !== this.confirmPassword) {
-        alert('Hasła nie pasują do siebie.');
-        return;
-      }
+const router = useRouter();
 
-      try {
-        const response = await axios.post('/api/users/register', {
-          username: this.username,
-          email: this.email,
-          password: this.password,
-          first_name: this.first_name,
-          last_name: this.last_name,
-        });
+const form = ref({
+  username: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
+  firstName: '',
+  lastName: ''
+});
 
-        if (response && response.data) {
-          console.log('Rejestracja zakończona sukcesem:', response.data);
-          this.$router.push('/login');
-        }
-      } catch (error) {
-        console.error('Błąd rejestracji:', error);
-        alert('Nie udało się zarejestrować użytkownika.');
-      }
-    },
-  },
-};
+async function handleRegister() {
+  if (form.value.password !== form.value.confirmPassword) {
+    alert('Hasła nie pasują do siebie.');
+    return;
+  }
+
+  const registerData: RegisterRequest = {
+    username: form.value.username,
+    password: form.value.password,
+    email: form.value.email,
+    firstName: form.value.firstName,
+    lastName: form.value.lastName,
+  };
+
+  try {
+    const response = await fetch('/api/users/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(RegisterRequestToJSON(registerData)),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Błąd: ${response.statusText}`);
+    }
+
+    console.log('Rejestracja zakończona sukcesem!');
+    router.push('/login');
+  } catch (error) {
+    console.error('Błąd rejestracji:', error);
+    alert('Nie udało się zarejestrować użytkownika.');
+  }
+}
 </script>
 
 <style scoped>
-/* Stylowanie głównego kontenera */
 .register-container {
   display: flex;
   justify-content: center;
@@ -90,7 +96,6 @@ export default {
   background: linear-gradient(135deg, #667eea, #764ba2);
 }
 
-/* Stylizacja formularza */
 .register-box {
   background: white;
   padding: 2rem;
@@ -101,7 +106,6 @@ export default {
   text-align: center;
 }
 
-/* Nagłówek */
 .title {
   font-size: 24px;
   font-weight: bold;
@@ -109,7 +113,6 @@ export default {
   color: #333;
 }
 
-/* Pola formularza */
 .input-group {
   margin-bottom: 15px;
   text-align: left;
@@ -130,7 +133,6 @@ export default {
   font-size: 16px;
 }
 
-/* Przycisk rejestracji */
 .register-button {
   width: 100%;
   padding: 10px;
@@ -147,7 +149,6 @@ export default {
   background-color: #5a3e91;
 }
 
-/* Przekierowanie do logowania */
 .redirect-text {
   margin-top: 15px;
   font-size: 14px;
