@@ -17,70 +17,61 @@ const routes = [
         name: 'Login',
         component: Login
     },
-
     {
         path: '/test',
         name: 'Test',
         component: Test
     },
-
     {
         path: '/register',
         name: 'Register',
         component: Register
     },
-
     {
         path: '/projects',
         name: 'Projects',
-        component: Projects,
-        children: [
-            {
-                path: ':projectId/edit',
-                name: 'EditProject',
-                component: EditProject,
-                props: true,
-            },
-            {
-                path: ':projectId/details',
-                name: 'ProjectDetails',
-                component: ProjectDetails,
-                props: true,
-            },
-            {
-                path: 'add-project',
-                name: 'AddProject',
-                component: AddProject,
-                props: true,
-            },
-            {
-                path: ':projectId/files',
-                name: 'ProjectFiles',
-                component: ProjectFiles,
-                props: true,
-            },
-            {
-                path: ':projectId/chat',
-                name: 'ProjectChat',
-                component: ProjectChat,
-                props: true,
-            },
-        ]
+        component: Projects
     },
-
+    {
+        path: '/projects/:projectId/edit',
+        name: 'EditProject',
+        component: EditProject,
+        props: true
+    },
+    {
+        path: '/projects/:projectId/details',
+        name: 'ProjectDetails',
+        component: ProjectDetails,
+        props: true
+    },
+    {
+        path: '/projects/add-project',
+        name: 'AddProject',
+        component: AddProject
+    },
+    {
+        path: '/projects/:projectId/files',
+        name: 'ProjectFiles',
+        component: ProjectFiles,
+        props: true
+    },
+    {
+        path: '/projects/:projectId/chat',
+        name: 'ProjectChat',
+        component: ProjectChat,
+        props: true
+    },
     {
         path: '/user-search',
         name: 'UserSearch',
-        component: UserSearch,
+        component: UserSearch
     },
-
     {
         path: '/:userid/chat',
         name: 'UserChat',
         component: UserChat,
-        props: true,
-    },
-
+        props: true
+    }
 ];
 
 const router = createRouter({

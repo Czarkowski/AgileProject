@@ -138,4 +138,44 @@ form label {
   color: white;
 }
 
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+th, td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: center;
+}
+th {
+  background-color: #4384b5;
+}
+tr:hover{
+  background-color: #2c3e50;
+}
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #4384b5 #2c3e50;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #2c3e50;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2c3e50;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2c3e50;
+}
+
+
+
 </style>
