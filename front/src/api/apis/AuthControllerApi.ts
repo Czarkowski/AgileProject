@@ -15,11 +15,14 @@
 
 import * as runtime from '../runtime';
 import type {
+  AuthTokensResponse,
   LoginRequest,
   RefreshTokenRequest,
   RegisterRequest,
 } from '../models/index';
 import {
+    AuthTokensResponseFromJSON,
+    AuthTokensResponseToJSON,
     LoginRequestFromJSON,
     LoginRequestToJSON,
     RefreshTokenRequestFromJSON,
@@ -47,7 +50,7 @@ export class AuthControllerApi extends runtime.BaseAPI {
 
     /**
      */
-    async loginRaw(requestParameters: LoginOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+    async loginRaw(requestParameters: LoginOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AuthTokensResponse>> {
         if (requestParameters['loginRequest'] == null) {
             throw new runtime.RequiredError(
                 'loginRequest',
@@ -80,12 +83,12 @@ export class AuthControllerApi extends runtime.BaseAPI {
             body: LoginRequestToJSON(requestParameters['loginRequest']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse<any>(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => AuthTokensResponseFromJSON(jsonValue));
     }
 
     /**
      */
-    async login(requestParameters: LoginOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
+    async login(requestParameters: LoginOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AuthTokensResponse> {
         const response = await this.loginRaw(requestParameters, initOverrides);
         return await response.value();
     }

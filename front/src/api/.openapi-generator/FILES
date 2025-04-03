@@ -4,6 +4,7 @@ apis/ProjectControllerApi.ts
 apis/UserControllerApi.ts
 apis/index.ts
 index.ts
+models/AuthTokensResponse.ts
 models/LoginRequest.ts
 models/ProjectDto.ts
 models/ProjectRequest.ts

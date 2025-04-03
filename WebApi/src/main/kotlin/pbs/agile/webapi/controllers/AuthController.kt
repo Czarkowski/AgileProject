@@ -45,7 +45,7 @@ class AuthController(
     }
 
     @PostMapping("/login")
-    fun login(@RequestBody request: LoginRequest): ResponseEntity<Any> {
+    fun login(@RequestBody request: LoginRequest): ResponseEntity<AuthTokensResponse> {
         return try {
             val authentication = authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken(request.identifier, request.password)
@@ -64,7 +64,7 @@ class AuthController(
             ResponseEntity.status(HttpStatus.OK).body(res)
 
         } catch (e: AuthenticationException) {
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials")
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null)
         }
     }
 

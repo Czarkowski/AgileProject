@@ -26,6 +26,7 @@
 <script lang="ts">
 import { LoginRequest } from '@/api/models/LoginRequest';
 import { UserControllerApi } from '@/api/apis/UserControllerApi';
+import { AuthControllerApi } from '@/api/apis/AuthControllerApi';
 
 export default {
   data() {
@@ -41,13 +42,16 @@ export default {
           identifier: this.email,
           password: this.password,
         };
-
-        const userApi = new UserControllerApi();
-
-        const userResponse = await userApi.getUserByUsername({ username: this.email });
-
-        if (userResponse) {
-          console.log('Zalogowano pomyślnie:', userResponse);
+        
+        const authControllerApi = new AuthControllerApi();
+        const response = await authControllerApi.login( { loginRequest: loginRequest } )
+        
+        // const userApi = new UserControllerApi();
+        // const userResponse = await userApi.getUserByUsername({ username: this.email });
+        
+        if (response) {
+          console.log(response) 
+          // console.log('Zalogowano pomyślnie:', userResponse);
 
           this.$router.push('/dashboard');
         }
