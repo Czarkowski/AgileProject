@@ -96,7 +96,7 @@ TODO
 ```
 
 ---
-## ✍️ Autor TODO
+## ✍️ Autor
  - Oliwia Paliwoda
  - Aleksanda Maciejak
  - Szymon Szkatulski 
