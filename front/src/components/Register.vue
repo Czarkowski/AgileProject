@@ -41,6 +41,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { RegisterRequest, RegisterRequestToJSON } from '@/api/models/RegisterRequest';
+import { AuthControllerApi } from '@/api/apis/AuthControllerApi';
 
 const router = useRouter();
 
@@ -67,15 +68,17 @@ async function handleRegister() {
     lastName: form.value.lastName,
   };
   try {
-    const response = await fetch('/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(RegisterRequestToJSON(registerData)),
-    });
+    const api = new AuthControllerApi()
+    const response = await api.register( { registerRequest: registerData } );
+    // const response = await fetch('/auth/register', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify(RegisterRequestToJSON(registerData)),
+    // });
 
-    if (!response.ok) {
-      throw new Error(`Błąd: ${response.statusText}`);
-    }
+    // if (!response.ok) {
+    //   throw new Error(`Błąd: ${response.statusText}`);
+    // }
 
     console.log('Rejestracja zakończona sukcesem!');
     router.push('/');
