@@ -66,9 +66,8 @@ async function handleRegister() {
     firstName: form.value.firstName,
     lastName: form.value.lastName,
   };
-
   try {
-    const response = await fetch('/api/users/register', {
+    const response = await fetch('/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(RegisterRequestToJSON(registerData)),
@@ -79,7 +78,7 @@ async function handleRegister() {
     }
 
     console.log('Rejestracja zakończona sukcesem!');
-    router.push('/login');
+    router.push('/');
   } catch (error) {
     console.error('Błąd rejestracji:', error);
     alert('Nie udało się zarejestrować użytkownika.');
