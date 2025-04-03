@@ -23,5 +23,6 @@ export default defineConfig({
         secure: false,
       },
     },
+    host: 'local.mariusz.com',
   },
 })
