@@ -89,7 +89,6 @@ Projekt na Koale
 │   ├── src/main/kotlin/     # Kod źródłowy aplikacji backendowej
 │   ├── src/main/resources/  # Pliki konfiguracyjne
 │   ├── build.gradle.kts     # Konfiguracja Gradle
-│   ├── application.yml      # Konfiguracja aplikacji
 │
 ├── README.md                # Dokumentacja projektu
 
