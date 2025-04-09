@@ -27,11 +27,11 @@
           <label for="last_name">Nazwisko</label>
           <input v-model="form.lastName" type="text" id="last_name" required />
         </div>
-        <button type="submit" class="register-button">Zarejestruj się</button>
+        <button type="submit">Zarejestruj się</button>
       </form>
-      <p class="redirect-text">
+      <p>
         Masz już konto? 
-        <router-link to="/login" class="login-link">Zaloguj się</router-link>
+        <router-link to="/login" class="links">Zaloguj się</router-link>
       </p>
     </div>
   </div>
@@ -95,14 +95,14 @@ async function handleRegister() {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: transparent;
 }
 
 .register-box {
-  background: white;
+  //background: white;
   padding: 2rem;
   border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  //box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 400px;
   text-align: center;
@@ -112,7 +112,6 @@ async function handleRegister() {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 20px;
-  color: #333;
 }
 
 .input-group {
@@ -122,18 +121,10 @@ async function handleRegister() {
 
 .input-group label {
   font-size: 14px;
-  color: #555;
   display: block;
   margin-bottom: 5px;
 }
 
-.input-group input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-}
 
 .register-button {
   width: 100%;

@@ -42,25 +42,29 @@ export default {
           identifier: this.email,
           password: this.password,
         };
-        
+
         const authControllerApi = new AuthControllerApi();
         const response = await authControllerApi.login( { loginRequest: loginRequest } )
-        
+
         // const userApi = new UserControllerApi();
         // const userResponse = await userApi.getUserByUsername({ username: this.email });
-        
+
+        if (response && response.token) {
+          localStorage.setItem('token', response.token);
+        }
+
         if (response) {
-          console.log(response) 
+          console.log(response)
           // console.log('Zalogowano pomyślnie:', userResponse);
 
-          this.$router.push('/dashboard');
+          this.$router.push('/projects');
         }
       } catch (error) {
         console.error('Błąd logowania:', error);
         alert('Nie udało się zalogować. Sprawdź swoje dane logowania.');
       }
     },
-    
+
     goToRegister() {
       this.$router.push('/register');
     }
