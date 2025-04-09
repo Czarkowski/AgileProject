@@ -16,36 +16,36 @@
 import * as runtime from '../runtime';
 import type {
   ProjectDto,
-  ProjectRequest,
-  ProjectUpdateRequest,
-  UserAndProjectRequest,
+  ProjectRequestBody,
+  ProjectUpdateRequestBody,
+  UserAndProjectRequestBody,
 } from '../models/index';
 import {
     ProjectDtoFromJSON,
     ProjectDtoToJSON,
-    ProjectRequestFromJSON,
-    ProjectRequestToJSON,
-    ProjectUpdateRequestFromJSON,
-    ProjectUpdateRequestToJSON,
-    UserAndProjectRequestFromJSON,
-    UserAndProjectRequestToJSON,
+    ProjectRequestBodyFromJSON,
+    ProjectRequestBodyToJSON,
+    ProjectUpdateRequestBodyFromJSON,
+    ProjectUpdateRequestBodyToJSON,
+    UserAndProjectRequestBodyFromJSON,
+    UserAndProjectRequestBodyToJSON,
 } from '../models/index';
 
 export interface AddProjectRequest {
-    projectRequest: ProjectRequest;
+    projectRequestBody: ProjectRequestBody;
 }
 
 export interface AddUserToProjectRequest {
-    userAndProjectRequest: UserAndProjectRequest;
+    userAndProjectRequestBody: UserAndProjectRequestBody;
 }
 
 export interface DeleteUserFromProjectRequest {
-    userAndProjectRequest: UserAndProjectRequest;
+    userAndProjectRequestBody: UserAndProjectRequestBody;
 }
 
 export interface UpdateProjectRequest {
     projectId: number;
-    projectUpdateRequest: ProjectUpdateRequest;
+    projectUpdateRequestBody: ProjectUpdateRequestBody;
 }
 
 /**
@@ -56,10 +56,10 @@ export class ProjectControllerApi extends runtime.BaseAPI {
     /**
      */
     async addProjectRaw(requestParameters: AddProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ProjectDto>> {
-        if (requestParameters['projectRequest'] == null) {
+        if (requestParameters['projectRequestBody'] == null) {
             throw new runtime.RequiredError(
-                'projectRequest',
-                'Required parameter "projectRequest" was null or undefined when calling addProject().'
+                'projectRequestBody',
+                'Required parameter "projectRequestBody" was null or undefined when calling addProject().'
             );
         }
 
@@ -85,7 +85,7 @@ export class ProjectControllerApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: ProjectRequestToJSON(requestParameters['projectRequest']),
+            body: ProjectRequestBodyToJSON(requestParameters['projectRequestBody']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ProjectDtoFromJSON(jsonValue));
@@ -101,10 +101,10 @@ export class ProjectControllerApi extends runtime.BaseAPI {
     /**
      */
     async addUserToProjectRaw(requestParameters: AddUserToProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
-        if (requestParameters['userAndProjectRequest'] == null) {
+        if (requestParameters['userAndProjectRequestBody'] == null) {
             throw new runtime.RequiredError(
-                'userAndProjectRequest',
-                'Required parameter "userAndProjectRequest" was null or undefined when calling addUserToProject().'
+                'userAndProjectRequestBody',
+                'Required parameter "userAndProjectRequestBody" was null or undefined when calling addUserToProject().'
             );
         }
 
@@ -130,7 +130,7 @@ export class ProjectControllerApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: UserAndProjectRequestToJSON(requestParameters['userAndProjectRequest']),
+            body: UserAndProjectRequestBodyToJSON(requestParameters['userAndProjectRequestBody']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse<any>(response);
@@ -146,10 +146,10 @@ export class ProjectControllerApi extends runtime.BaseAPI {
     /**
      */
     async deleteUserFromProjectRaw(requestParameters: DeleteUserFromProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
-        if (requestParameters['userAndProjectRequest'] == null) {
+        if (requestParameters['userAndProjectRequestBody'] == null) {
             throw new runtime.RequiredError(
-                'userAndProjectRequest',
-                'Required parameter "userAndProjectRequest" was null or undefined when calling deleteUserFromProject().'
+                'userAndProjectRequestBody',
+                'Required parameter "userAndProjectRequestBody" was null or undefined when calling deleteUserFromProject().'
             );
         }
 
@@ -175,7 +175,7 @@ export class ProjectControllerApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: UserAndProjectRequestToJSON(requestParameters['userAndProjectRequest']),
+            body: UserAndProjectRequestBodyToJSON(requestParameters['userAndProjectRequestBody']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse<any>(response);
@@ -233,10 +233,10 @@ export class ProjectControllerApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['projectUpdateRequest'] == null) {
+        if (requestParameters['projectUpdateRequestBody'] == null) {
             throw new runtime.RequiredError(
-                'projectUpdateRequest',
-                'Required parameter "projectUpdateRequest" was null or undefined when calling updateProject().'
+                'projectUpdateRequestBody',
+                'Required parameter "projectUpdateRequestBody" was null or undefined when calling updateProject().'
             );
         }
 
@@ -262,7 +262,7 @@ export class ProjectControllerApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: ProjectUpdateRequestToJSON(requestParameters['projectUpdateRequest']),
+            body: ProjectUpdateRequestBodyToJSON(requestParameters['projectUpdateRequestBody']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse<any>(response);

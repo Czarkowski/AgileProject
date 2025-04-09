@@ -6,9 +6,9 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import pbs.agile.webapi.dtos.ProjectDto
-import pbs.agile.webapi.requests.UserAndProjectRequest
-import pbs.agile.webapi.requests.ProjectRequest
-import pbs.agile.webapi.requests.ProjectUpdateRequest
+import pbs.agile.webapi.requests.UserAndProjectRequestBody
+import pbs.agile.webapi.requests.ProjectRequestBody
+import pbs.agile.webapi.requests.ProjectUpdateRequestBody
 import pbs.agile.webapi.services.ProjectService
 
 @RestController
@@ -19,7 +19,7 @@ class ProjectController(@Autowired private val projectService: ProjectService) {
     fun getAllProjects(): List<ProjectDto> = projectService.getAllProjects()
 
     @PostMapping
-    fun addProject(@RequestBody project: ProjectRequest): ProjectDto {
+    fun addProject(@RequestBody project: ProjectRequestBody): ProjectDto {
 
         return projectService.addProject(project)
     }
@@ -27,7 +27,7 @@ class ProjectController(@Autowired private val projectService: ProjectService) {
     @PutMapping("/{projectId}")
     fun updateProject(
         @PathVariable projectId: Long,
-        @RequestBody updateRequest: ProjectUpdateRequest
+        @RequestBody updateRequest: ProjectUpdateRequestBody
     ): ResponseEntity<Any> {
         return try {
             projectService.updateProject(projectId, updateRequest)
@@ -38,7 +38,7 @@ class ProjectController(@Autowired private val projectService: ProjectService) {
     }
 
     @PostMapping("/addUser")
-    fun addUserToProject(@RequestBody userAddRequest: UserAndProjectRequest
+    fun addUserToProject(@RequestBody userAddRequest: UserAndProjectRequestBody
         ): ResponseEntity<Any> {
         return try {
             val isOk = projectService.addUserToProject(userAddRequest.projectId, userAddRequest.userId)
@@ -49,7 +49,7 @@ class ProjectController(@Autowired private val projectService: ProjectService) {
     }
 
     @PostMapping("/removeUser")
-    fun deleteUserFromProject(@RequestBody userAddRequest: UserAndProjectRequest
+    fun deleteUserFromProject(@RequestBody userAddRequest: UserAndProjectRequestBody
         ): ResponseEntity<Any> {
         return try {
             val isOk = projectService.deleteUserFromProject(userAddRequest.projectId, userAddRequest.userId)

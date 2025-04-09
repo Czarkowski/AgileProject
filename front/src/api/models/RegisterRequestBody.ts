@@ -16,45 +16,45 @@ import { mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface RegisterRequest
+ * @interface RegisterRequestBody
  */
-export interface RegisterRequest {
+export interface RegisterRequestBody {
     /**
      * 
      * @type {string}
-     * @memberof RegisterRequest
+     * @memberof RegisterRequestBody
      */
     username: string;
     /**
      * 
      * @type {string}
-     * @memberof RegisterRequest
+     * @memberof RegisterRequestBody
      */
     password: string;
     /**
      * 
      * @type {string}
-     * @memberof RegisterRequest
+     * @memberof RegisterRequestBody
      */
     email: string;
     /**
      * 
      * @type {string}
-     * @memberof RegisterRequest
+     * @memberof RegisterRequestBody
      */
     firstName: string;
     /**
      * 
      * @type {string}
-     * @memberof RegisterRequest
+     * @memberof RegisterRequestBody
      */
     lastName: string;
 }
 
 /**
- * Check if a given object implements the RegisterRequest interface.
+ * Check if a given object implements the RegisterRequestBody interface.
  */
-export function instanceOfRegisterRequest(value: object): value is RegisterRequest {
+export function instanceOfRegisterRequestBody(value: object): value is RegisterRequestBody {
     if (!('username' in value) || value['username'] === undefined) return false;
     if (!('password' in value) || value['password'] === undefined) return false;
     if (!('email' in value) || value['email'] === undefined) return false;
@@ -63,11 +63,11 @@ export function instanceOfRegisterRequest(value: object): value is RegisterReque
     return true;
 }
 
-export function RegisterRequestFromJSON(json: any): RegisterRequest {
-    return RegisterRequestFromJSONTyped(json, false);
+export function RegisterRequestBodyFromJSON(json: any): RegisterRequestBody {
+    return RegisterRequestBodyFromJSONTyped(json, false);
 }
 
-export function RegisterRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): RegisterRequest {
+export function RegisterRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): RegisterRequestBody {
     if (json == null) {
         return json;
     }
@@ -81,11 +81,11 @@ export function RegisterRequestFromJSONTyped(json: any, ignoreDiscriminator: boo
     };
 }
 
-export function RegisterRequestToJSON(json: any): RegisterRequest {
-    return RegisterRequestToJSONTyped(json, false);
+export function RegisterRequestBodyToJSON(json: any): RegisterRequestBody {
+    return RegisterRequestBodyToJSONTyped(json, false);
 }
 
-export function RegisterRequestToJSONTyped(value?: RegisterRequest | null, ignoreDiscriminator: boolean = false): any {
+export function RegisterRequestBodyToJSONTyped(value?: RegisterRequestBody | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

@@ -16,30 +16,30 @@ import { mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface RefreshTokenRequest
+ * @interface RefreshTokenRequestBody
  */
-export interface RefreshTokenRequest {
+export interface RefreshTokenRequestBody {
     /**
      * 
      * @type {string}
-     * @memberof RefreshTokenRequest
+     * @memberof RefreshTokenRequestBody
      */
     refreshToken: string;
 }
 
 /**
- * Check if a given object implements the RefreshTokenRequest interface.
+ * Check if a given object implements the RefreshTokenRequestBody interface.
  */
-export function instanceOfRefreshTokenRequest(value: object): value is RefreshTokenRequest {
+export function instanceOfRefreshTokenRequestBody(value: object): value is RefreshTokenRequestBody {
     if (!('refreshToken' in value) || value['refreshToken'] === undefined) return false;
     return true;
 }
 
-export function RefreshTokenRequestFromJSON(json: any): RefreshTokenRequest {
-    return RefreshTokenRequestFromJSONTyped(json, false);
+export function RefreshTokenRequestBodyFromJSON(json: any): RefreshTokenRequestBody {
+    return RefreshTokenRequestBodyFromJSONTyped(json, false);
 }
 
-export function RefreshTokenRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): RefreshTokenRequest {
+export function RefreshTokenRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): RefreshTokenRequestBody {
     if (json == null) {
         return json;
     }
@@ -49,11 +49,11 @@ export function RefreshTokenRequestFromJSONTyped(json: any, ignoreDiscriminator:
     };
 }
 
-export function RefreshTokenRequestToJSON(json: any): RefreshTokenRequest {
-    return RefreshTokenRequestToJSONTyped(json, false);
+export function RefreshTokenRequestBodyToJSON(json: any): RefreshTokenRequestBody {
+    return RefreshTokenRequestBodyToJSONTyped(json, false);
 }
 
-export function RefreshTokenRequestToJSONTyped(value?: RefreshTokenRequest | null, ignoreDiscriminator: boolean = false): any {
+export function RefreshTokenRequestBodyToJSONTyped(value?: RefreshTokenRequestBody | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

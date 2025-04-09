@@ -1,11 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
-export * from './AuthTokensResponse';
-export * from './LoginRequest';
+export * from './AuthTokensResponseBody';
+export * from './LoginRequestBody';
 export * from './ProjectDto';
-export * from './ProjectRequest';
-export * from './ProjectUpdateRequest';
-export * from './RefreshTokenRequest';
-export * from './RegisterRequest';
-export * from './UserAndProjectRequest';
+export * from './ProjectRequestBody';
+export * from './ProjectUpdateRequestBody';
+export * from './RefreshTokenRequestBody';
+export * from './RegisterRequestBody';
+export * from './UserAndProjectRequestBody';
 export * from './UserDto';
