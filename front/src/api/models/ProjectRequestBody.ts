@@ -16,58 +16,67 @@ import { mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface ProjectUpdateRequest
+ * @interface ProjectRequestBody
  */
-export interface ProjectUpdateRequest {
+export interface ProjectRequestBody {
+    /**
+     * 
+     * @type {number}
+     * @memberof ProjectRequestBody
+     */
+    ownerId: number;
     /**
      * 
      * @type {string}
-     * @memberof ProjectUpdateRequest
+     * @memberof ProjectRequestBody
      */
     title: string;
     /**
      * 
      * @type {string}
-     * @memberof ProjectUpdateRequest
+     * @memberof ProjectRequestBody
      */
     description: string;
 }
 
 /**
- * Check if a given object implements the ProjectUpdateRequest interface.
+ * Check if a given object implements the ProjectRequestBody interface.
  */
-export function instanceOfProjectUpdateRequest(value: object): value is ProjectUpdateRequest {
+export function instanceOfProjectRequestBody(value: object): value is ProjectRequestBody {
+    if (!('ownerId' in value) || value['ownerId'] === undefined) return false;
     if (!('title' in value) || value['title'] === undefined) return false;
     if (!('description' in value) || value['description'] === undefined) return false;
     return true;
 }
 
-export function ProjectUpdateRequestFromJSON(json: any): ProjectUpdateRequest {
-    return ProjectUpdateRequestFromJSONTyped(json, false);
+export function ProjectRequestBodyFromJSON(json: any): ProjectRequestBody {
+    return ProjectRequestBodyFromJSONTyped(json, false);
 }
 
-export function ProjectUpdateRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): ProjectUpdateRequest {
+export function ProjectRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): ProjectRequestBody {
     if (json == null) {
         return json;
     }
     return {
         
+        'ownerId': json['ownerId'],
         'title': json['title'],
         'description': json['description'],
     };
 }
 
-export function ProjectUpdateRequestToJSON(json: any): ProjectUpdateRequest {
-    return ProjectUpdateRequestToJSONTyped(json, false);
+export function ProjectRequestBodyToJSON(json: any): ProjectRequestBody {
+    return ProjectRequestBodyToJSONTyped(json, false);
 }
 
-export function ProjectUpdateRequestToJSONTyped(value?: ProjectUpdateRequest | null, ignoreDiscriminator: boolean = false): any {
+export function ProjectRequestBodyToJSONTyped(value?: ProjectRequestBody | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
 
     return {
         
+        'ownerId': value['ownerId'],
         'title': value['title'],
         'description': value['description'],
     };

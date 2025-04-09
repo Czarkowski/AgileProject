@@ -9,6 +9,6 @@ import pbs.agile.webapi.models.entities.User
 
 @Repository
 interface ProjectRepository : JpaRepository<Project, Long> {
-    fun findAllByTitle(project_name: String): List<Project>
+    fun findAllByTitle(projectName: String): List<Project>
     fun findAllByUsers_Id(userId: Long): List<Project>
 }

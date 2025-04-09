@@ -40,7 +40,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { RegisterRequest, RegisterRequestToJSON } from '@/api/models/RegisterRequest';
+import { RegisterRequestBody } from '@/api/models/RegisterRequestBody';
 import { AuthControllerApi } from '@/api/apis/AuthControllerApi';
 
 const router = useRouter();
@@ -60,7 +60,7 @@ async function handleRegister() {
     return;
   }
 
-  const registerData: RegisterRequest = {
+  const registerData: RegisterRequestBody = {
     username: form.value.username,
     password: form.value.password,
     email: form.value.email,
@@ -69,7 +69,7 @@ async function handleRegister() {
   };
   try {
     const api = new AuthControllerApi()
-    const response = await api.register( { registerRequest: registerData } );
+    const response = await api.register( { registerRequestBody: registerData } );
     // const response = await fetch('/auth/register', {
     //   method: 'POST',
     //   headers: { 'Content-Type': 'application/json' },

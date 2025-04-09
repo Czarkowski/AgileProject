@@ -22,6 +22,10 @@ import {
     UserDtoToJSON,
 } from '../models/index';
 
+export interface GetUserByIdentifierRequest {
+    identifier: string;
+}
+
 export interface GetUserByUsernameRequest {
     username: string;
 }
@@ -63,6 +67,52 @@ export class UserControllerApi extends runtime.BaseAPI {
      */
     async getAllUsers(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UserDto>> {
         const response = await this.getAllUsersRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async getUserByIdentifierRaw(requestParameters: GetUserByIdentifierRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserDto>> {
+        if (requestParameters['identifier'] == null) {
+            throw new runtime.RequiredError(
+                'identifier',
+                'Required parameter "identifier" was null or undefined when calling getUserByIdentifier().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['identifier'] != null) {
+            queryParameters['identifier'] = requestParameters['identifier'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
+            headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
+        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/users/user`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => UserDtoFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async getUserByIdentifier(requestParameters: GetUserByIdentifierRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserDto> {
+        const response = await this.getUserByIdentifierRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

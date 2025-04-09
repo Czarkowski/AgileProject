@@ -8,7 +8,7 @@ import pbs.agile.webapi.models.entities.User
 
 @Repository
 interface UserRepository : JpaRepository<User, Long> {
-    fun findByUsername(Username: String): User?
+    fun findByUsername(username: String): User?
     fun getBy(): List<User>
     @Query("SELECT u FROM User u WHERE u.username = :identifier OR u.email = :identifier")
     fun findByUsernameOrEmail(@Param("identifier") identifier: String): User?

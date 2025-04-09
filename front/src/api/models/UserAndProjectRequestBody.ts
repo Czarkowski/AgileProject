@@ -16,37 +16,37 @@ import { mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface UserAndProjectRequest
+ * @interface UserAndProjectRequestBody
  */
-export interface UserAndProjectRequest {
+export interface UserAndProjectRequestBody {
     /**
      * 
      * @type {number}
-     * @memberof UserAndProjectRequest
+     * @memberof UserAndProjectRequestBody
      */
     userId: number;
     /**
      * 
      * @type {number}
-     * @memberof UserAndProjectRequest
+     * @memberof UserAndProjectRequestBody
      */
     projectId: number;
 }
 
 /**
- * Check if a given object implements the UserAndProjectRequest interface.
+ * Check if a given object implements the UserAndProjectRequestBody interface.
  */
-export function instanceOfUserAndProjectRequest(value: object): value is UserAndProjectRequest {
+export function instanceOfUserAndProjectRequestBody(value: object): value is UserAndProjectRequestBody {
     if (!('userId' in value) || value['userId'] === undefined) return false;
     if (!('projectId' in value) || value['projectId'] === undefined) return false;
     return true;
 }
 
-export function UserAndProjectRequestFromJSON(json: any): UserAndProjectRequest {
-    return UserAndProjectRequestFromJSONTyped(json, false);
+export function UserAndProjectRequestBodyFromJSON(json: any): UserAndProjectRequestBody {
+    return UserAndProjectRequestBodyFromJSONTyped(json, false);
 }
 
-export function UserAndProjectRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): UserAndProjectRequest {
+export function UserAndProjectRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): UserAndProjectRequestBody {
     if (json == null) {
         return json;
     }
@@ -57,11 +57,11 @@ export function UserAndProjectRequestFromJSONTyped(json: any, ignoreDiscriminato
     };
 }
 
-export function UserAndProjectRequestToJSON(json: any): UserAndProjectRequest {
-    return UserAndProjectRequestToJSONTyped(json, false);
+export function UserAndProjectRequestBodyToJSON(json: any): UserAndProjectRequestBody {
+    return UserAndProjectRequestBodyToJSONTyped(json, false);
 }
 
-export function UserAndProjectRequestToJSONTyped(value?: UserAndProjectRequest | null, ignoreDiscriminator: boolean = false): any {
+export function UserAndProjectRequestBodyToJSONTyped(value?: UserAndProjectRequestBody | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

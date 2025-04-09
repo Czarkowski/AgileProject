@@ -16,37 +16,37 @@ import { mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface LoginRequest
+ * @interface LoginRequestBody
  */
-export interface LoginRequest {
+export interface LoginRequestBody {
     /**
      * 
      * @type {string}
-     * @memberof LoginRequest
+     * @memberof LoginRequestBody
      */
     identifier: string;
     /**
      * 
      * @type {string}
-     * @memberof LoginRequest
+     * @memberof LoginRequestBody
      */
     password: string;
 }
 
 /**
- * Check if a given object implements the LoginRequest interface.
+ * Check if a given object implements the LoginRequestBody interface.
  */
-export function instanceOfLoginRequest(value: object): value is LoginRequest {
+export function instanceOfLoginRequestBody(value: object): value is LoginRequestBody {
     if (!('identifier' in value) || value['identifier'] === undefined) return false;
     if (!('password' in value) || value['password'] === undefined) return false;
     return true;
 }
 
-export function LoginRequestFromJSON(json: any): LoginRequest {
-    return LoginRequestFromJSONTyped(json, false);
+export function LoginRequestBodyFromJSON(json: any): LoginRequestBody {
+    return LoginRequestBodyFromJSONTyped(json, false);
 }
 
-export function LoginRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): LoginRequest {
+export function LoginRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): LoginRequestBody {
     if (json == null) {
         return json;
     }
@@ -57,11 +57,11 @@ export function LoginRequestFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function LoginRequestToJSON(json: any): LoginRequest {
-    return LoginRequestToJSONTyped(json, false);
+export function LoginRequestBodyToJSON(json: any): LoginRequestBody {
+    return LoginRequestBodyToJSONTyped(json, false);
 }
 
-export function LoginRequestToJSONTyped(value?: LoginRequest | null, ignoreDiscriminator: boolean = false): any {
+export function LoginRequestBodyToJSONTyped(value?: LoginRequestBody | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

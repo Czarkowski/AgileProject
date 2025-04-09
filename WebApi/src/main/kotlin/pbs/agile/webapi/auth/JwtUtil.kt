@@ -14,7 +14,7 @@ class JwtUtil {
 
     fun generateToken(username: String, authorities: List<String>): String {
         val claims: HashMap<String, Any> = HashMap()
-        claims.put("roles", authorities)
+        claims["roles"] = authorities
         return Jwts.builder()
             .setClaims(claims)
             .setSubject(username)

@@ -15,32 +15,32 @@
 
 import * as runtime from '../runtime';
 import type {
-  AuthTokensResponse,
-  LoginRequest,
-  RefreshTokenRequest,
-  RegisterRequest,
+  AuthTokensResponseBody,
+  LoginRequestBody,
+  RefreshTokenRequestBody,
+  RegisterRequestBody,
 } from '../models/index';
 import {
-    AuthTokensResponseFromJSON,
-    AuthTokensResponseToJSON,
-    LoginRequestFromJSON,
-    LoginRequestToJSON,
-    RefreshTokenRequestFromJSON,
-    RefreshTokenRequestToJSON,
-    RegisterRequestFromJSON,
-    RegisterRequestToJSON,
+    AuthTokensResponseBodyFromJSON,
+    AuthTokensResponseBodyToJSON,
+    LoginRequestBodyFromJSON,
+    LoginRequestBodyToJSON,
+    RefreshTokenRequestBodyFromJSON,
+    RefreshTokenRequestBodyToJSON,
+    RegisterRequestBodyFromJSON,
+    RegisterRequestBodyToJSON,
 } from '../models/index';
 
-export interface LoginOperationRequest {
-    loginRequest: LoginRequest;
+export interface LoginRequest {
+    loginRequestBody: LoginRequestBody;
 }
 
-export interface RefreshTokenOperationRequest {
-    refreshTokenRequest: RefreshTokenRequest;
+export interface RefreshTokenRequest {
+    refreshTokenRequestBody: RefreshTokenRequestBody;
 }
 
-export interface RegisterOperationRequest {
-    registerRequest: RegisterRequest;
+export interface RegisterRequest {
+    registerRequestBody: RegisterRequestBody;
 }
 
 /**
@@ -50,11 +50,11 @@ export class AuthControllerApi extends runtime.BaseAPI {
 
     /**
      */
-    async loginRaw(requestParameters: LoginOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AuthTokensResponse>> {
-        if (requestParameters['loginRequest'] == null) {
+    async loginRaw(requestParameters: LoginRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AuthTokensResponseBody>> {
+        if (requestParameters['loginRequestBody'] == null) {
             throw new runtime.RequiredError(
-                'loginRequest',
-                'Required parameter "loginRequest" was null or undefined when calling login().'
+                'loginRequestBody',
+                'Required parameter "loginRequestBody" was null or undefined when calling login().'
             );
         }
 
@@ -80,26 +80,26 @@ export class AuthControllerApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: LoginRequestToJSON(requestParameters['loginRequest']),
+            body: LoginRequestBodyToJSON(requestParameters['loginRequestBody']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => AuthTokensResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => AuthTokensResponseBodyFromJSON(jsonValue));
     }
 
     /**
      */
-    async login(requestParameters: LoginOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AuthTokensResponse> {
+    async login(requestParameters: LoginRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AuthTokensResponseBody> {
         const response = await this.loginRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async refreshTokenRaw(requestParameters: RefreshTokenOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
-        if (requestParameters['refreshTokenRequest'] == null) {
+    async refreshTokenRaw(requestParameters: RefreshTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters['refreshTokenRequestBody'] == null) {
             throw new runtime.RequiredError(
-                'refreshTokenRequest',
-                'Required parameter "refreshTokenRequest" was null or undefined when calling refreshToken().'
+                'refreshTokenRequestBody',
+                'Required parameter "refreshTokenRequestBody" was null or undefined when calling refreshToken().'
             );
         }
 
@@ -125,7 +125,7 @@ export class AuthControllerApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: RefreshTokenRequestToJSON(requestParameters['refreshTokenRequest']),
+            body: RefreshTokenRequestBodyToJSON(requestParameters['refreshTokenRequestBody']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse<any>(response);
@@ -133,18 +133,18 @@ export class AuthControllerApi extends runtime.BaseAPI {
 
     /**
      */
-    async refreshToken(requestParameters: RefreshTokenOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
+    async refreshToken(requestParameters: RefreshTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
         const response = await this.refreshTokenRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async registerRaw(requestParameters: RegisterOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<string>> {
-        if (requestParameters['registerRequest'] == null) {
+    async registerRaw(requestParameters: RegisterRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<string>> {
+        if (requestParameters['registerRequestBody'] == null) {
             throw new runtime.RequiredError(
-                'registerRequest',
-                'Required parameter "registerRequest" was null or undefined when calling register().'
+                'registerRequestBody',
+                'Required parameter "registerRequestBody" was null or undefined when calling register().'
             );
         }
 
@@ -170,7 +170,7 @@ export class AuthControllerApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: RegisterRequestToJSON(requestParameters['registerRequest']),
+            body: RegisterRequestBodyToJSON(requestParameters['registerRequestBody']),
         }, initOverrides);
 
         if (this.isJsonMime(response.headers.get('content-type'))) {
@@ -182,7 +182,7 @@ export class AuthControllerApi extends runtime.BaseAPI {
 
     /**
      */
-    async register(requestParameters: RegisterOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<string> {
+    async register(requestParameters: RegisterRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<string> {
         const response = await this.registerRaw(requestParameters, initOverrides);
         return await response.value();
     }

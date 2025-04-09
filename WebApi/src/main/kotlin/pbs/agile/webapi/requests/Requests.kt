@@ -1,9 +1,9 @@
 package pbs.agile.webapi.requests
 
 
-data class ProjectRequest(val ownerId: Long, val title: String, val description: String)
-data class UserAndProjectRequest(val userId: Long, val projectId: Long)
-data class ProjectUpdateRequest(
+data class ProjectRequestBody(val ownerId: Long, val title: String, val description: String)
+data class UserAndProjectRequestBody(val userId: Long, val projectId: Long)
+data class ProjectUpdateRequestBody(
     val title: String,
     val description: String
 )

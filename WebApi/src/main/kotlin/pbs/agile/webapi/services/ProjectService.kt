@@ -10,8 +10,8 @@ import pbs.agile.webapi.mappers.toDTO
 import pbs.agile.webapi.models.entities.Project
 import pbs.agile.webapi.repositories.ProjectRepository
 import pbs.agile.webapi.repositories.UserRepository
-import pbs.agile.webapi.requests.ProjectRequest
-import pbs.agile.webapi.requests.ProjectUpdateRequest
+import pbs.agile.webapi.requests.ProjectRequestBody
+import pbs.agile.webapi.requests.ProjectUpdateRequestBody
 
 @Service
 class ProjectService(@Autowired private val projectRepository: ProjectRepository,
@@ -23,7 +23,7 @@ class ProjectService(@Autowired private val projectRepository: ProjectRepository
         return res;
     }
 
-    fun addProject(projectRequest: ProjectRequest): ProjectDto{
+    fun addProject(projectRequest: ProjectRequestBody): ProjectDto{
         val owner = userRepository.findById(projectRequest.ownerId).orElseThrow()
         var project: Project = Project()
         project.description = projectRequest.description
@@ -72,7 +72,7 @@ class ProjectService(@Autowired private val projectRepository: ProjectRepository
     }
 
     @Transactional
-    fun updateProject(projectId: Long, updateRequest: ProjectUpdateRequest) {
+    fun updateProject(projectId: Long, updateRequest: ProjectUpdateRequestBody) {
         val project = projectRepository.findById(projectId)
             .orElseThrow { EntityNotFoundException("Project with ID $projectId not found") }
 

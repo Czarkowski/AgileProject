@@ -11,7 +11,6 @@ import pbs.agile.webapi.auth.JwtUtil
 import pbs.agile.webapi.models.entities.User
 import pbs.agile.webapi.repositories.UserRepository
 import pbs.agile.webapi.services.AuthUserDetailsService
-import java.util.*
 
 @RestController
 @RequestMapping("/auth")
@@ -25,7 +24,7 @@ class AuthController(
 ) {
 
     @PostMapping("/register")
-    fun register(@RequestBody request: RegisterRequest): ResponseEntity<String> {
+    fun register(@RequestBody request: RegisterRequestBody): ResponseEntity<String> {
         if (userRepository.findByUsername(request.username) != null) {
             return ResponseEntity.badRequest().body("User already exists")
         }
@@ -45,7 +44,7 @@ class AuthController(
     }
 
     @PostMapping("/login")
-    fun login(@RequestBody request: LoginRequest): ResponseEntity<AuthTokensResponse> {
+    fun login(@RequestBody request: LoginRequestBody): ResponseEntity<AuthTokensResponseBody> {
         return try {
             val authentication = authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken(request.identifier, request.password)
@@ -53,12 +52,13 @@ class AuthController(
             val authorities = authentication.authorities
             val roles = authorities.stream().map { it.authority }.toList()
 
-            val token = jwtUtil.generateToken(request.identifier, roles)
+            val token = jwtUtil.generateToken(authentication.name, roles)
             val refreshToken = jwtUtil.generateRefreshToken(request.identifier)
 
-            var res: AuthTokensResponse = AuthTokensResponse(
+            var res: AuthTokensResponseBody = AuthTokensResponseBody(
                 token = token,
-                refreshToken = refreshToken
+                refreshToken = refreshToken,
+                userName = authentication.name
             )
 
             ResponseEntity.status(HttpStatus.OK).body(res)
@@ -69,7 +69,7 @@ class AuthController(
     }
 
     @PostMapping("/refresh")
-    fun refreshToken(@RequestBody request: RefreshTokenRequest): ResponseEntity<Any> {
+    fun refreshToken(@RequestBody request: RefreshTokenRequestBody): ResponseEntity<Any> {
         return try {
             if (!jwtUtil.isTokenValid(request.refreshToken)) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token")
@@ -79,9 +79,10 @@ class AuthController(
 
             val newAccessToken = jwtUtil.generateToken(username, userDetails.authorities.stream().map { it.authority }.toList())
 
-            var res: AuthTokensResponse = AuthTokensResponse(
+            var res: AuthTokensResponseBody = AuthTokensResponseBody(
                 token = newAccessToken,
-                refreshToken = request.refreshToken
+                refreshToken = request.refreshToken,
+                userName = username
             )
             ResponseEntity.ok(res)
         } catch (e: Exception) {
@@ -90,7 +91,7 @@ class AuthController(
     }
 }
 
-data class RegisterRequest(val username: String, val password: String, val email: String, val first_name: String, val last_name: String)
-data class LoginRequest(val identifier: String, val password: String)
-data class RefreshTokenRequest(val refreshToken: String)
-data class AuthTokensResponse(val token: String, val refreshToken: String)
+data class RegisterRequestBody(val username: String, val password: String, val email: String, val first_name: String, val last_name: String)
+data class LoginRequestBody(val identifier: String, val password: String)
+data class RefreshTokenRequestBody(val refreshToken: String)
+data class AuthTokensResponseBody(val token: String, val refreshToken: String, val userName: String)
