@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { LoginRequest } from '@/api/models/LoginRequest';
+import { LoginRequestBody } from '@/api/models/LoginRequestBody';
 import { UserControllerApi } from '@/api/apis/UserControllerApi';
 import { AuthControllerApi } from '@/api/apis/AuthControllerApi';
 
@@ -38,13 +38,13 @@ export default {
   methods: {
     async handleLogin() {
       try {
-        const loginRequest: LoginRequest = {
+        const loginRequest: LoginRequestBody = {
           identifier: this.email,
           password: this.password,
         };
 
         const authControllerApi = new AuthControllerApi();
-        const response = await authControllerApi.login( { loginRequest: loginRequest } )
+        const response = await authControllerApi.login( { loginRequestBody: loginRequest } )
 
         // const userApi = new UserControllerApi();
         // const userResponse = await userApi.getUserByUsername({ username: this.email });

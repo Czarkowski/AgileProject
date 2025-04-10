@@ -24,6 +24,7 @@ class SecurityConfig(
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         return http
+                .cors(Customizer.withDefaults())
             .csrf { it.disable() }
             .authorizeHttpRequests {
                 it.requestMatchers( "/auth/**", "/auth/login","/auth/register", "/swagger-ui/**", "/v3/api-docs/**").permitAll()

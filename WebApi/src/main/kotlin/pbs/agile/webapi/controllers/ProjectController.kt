@@ -7,19 +7,20 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import pbs.agile.webapi.dtos.ProjectDto
 import pbs.agile.webapi.requests.UserAndProjectRequestBody
-import pbs.agile.webapi.requests.ProjectRequestBody
+import pbs.agile.webapi.requests.ProjectAddRequestBody
 import pbs.agile.webapi.requests.ProjectUpdateRequestBody
 import pbs.agile.webapi.services.ProjectService
 
 @RestController
 @RequestMapping("/api/projects")
+@CrossOrigin(origins = ["http://localhost:5173"])
 class ProjectController(@Autowired private val projectService: ProjectService) {
 
     @GetMapping
     fun getAllProjects(): List<ProjectDto> = projectService.getAllProjects()
 
     @PostMapping
-    fun addProject(@RequestBody project: ProjectRequestBody): ProjectDto {
+    fun addProject(@RequestBody project: ProjectAddRequestBody): ProjectDto {
 
         return projectService.addProject(project)
     }

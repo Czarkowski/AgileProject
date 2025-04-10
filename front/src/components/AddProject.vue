@@ -31,7 +31,10 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { ProjectAddRequestBody} from '@/api/models/ProjectAddRequestBody';
+import { ProjectControllerApi } from '@/api/apis/ProjectControllerApi';
+import { Configuration } from '@/api/runtime';
 export default {
   NAME: "AddProject",
   data() {
@@ -49,6 +52,15 @@ export default {
 
     methods: {
       addProject() {
+        const projectRequestBody: ProjectAddRequestBody = {
+          description: this.projectDetails,
+          title: this.projectName,
+          ownerId: 2,
+        };
+        const configuration = new Configuration({ accessToken: localStorage.getItem("token")});
+        const projectControllerApi = new ProjectControllerApi(configuration);
+        projectControllerApi.addProject({ projectAddRequestBody: projectRequestBody})
+
         if (this.projectName === '') {
           this.showError = true;
         } else {

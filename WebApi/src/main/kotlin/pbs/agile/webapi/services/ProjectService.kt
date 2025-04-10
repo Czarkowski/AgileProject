@@ -10,7 +10,7 @@ import pbs.agile.webapi.mappers.toDTO
 import pbs.agile.webapi.models.entities.Project
 import pbs.agile.webapi.repositories.ProjectRepository
 import pbs.agile.webapi.repositories.UserRepository
-import pbs.agile.webapi.requests.ProjectRequestBody
+import pbs.agile.webapi.requests.ProjectAddRequestBody
 import pbs.agile.webapi.requests.ProjectUpdateRequestBody
 
 @Service
@@ -23,7 +23,7 @@ class ProjectService(@Autowired private val projectRepository: ProjectRepository
         return res;
     }
 
-    fun addProject(projectRequest: ProjectRequestBody): ProjectDto{
+    fun addProject(projectRequest: ProjectAddRequestBody): ProjectDto{
         val owner = userRepository.findById(projectRequest.ownerId).orElseThrow()
         var project: Project = Project()
         project.description = projectRequest.description

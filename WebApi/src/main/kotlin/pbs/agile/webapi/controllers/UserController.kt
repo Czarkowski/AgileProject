@@ -8,6 +8,7 @@ import pbs.agile.webapi.services.UserService
 
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin(origins = ["http://localhost:5173"])
 class UserController(@Autowired private val userService: UserService) {
 
     @GetMapping

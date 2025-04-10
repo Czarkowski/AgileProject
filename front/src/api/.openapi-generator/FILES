@@ -5,8 +5,8 @@ apis/index.ts
 index.ts
 models/AuthTokensResponseBody.ts
 models/LoginRequestBody.ts
+models/ProjectAddRequestBody.ts
 models/ProjectDto.ts
-models/ProjectRequestBody.ts
 models/ProjectUpdateRequestBody.ts
 models/RefreshTokenRequestBody.ts
 models/RegisterRequestBody.ts

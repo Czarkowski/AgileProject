@@ -16,44 +16,44 @@ import { mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface ProjectRequestBody
+ * @interface ProjectAddRequestBody
  */
-export interface ProjectRequestBody {
+export interface ProjectAddRequestBody {
     /**
      * 
      * @type {number}
-     * @memberof ProjectRequestBody
+     * @memberof ProjectAddRequestBody
      */
     ownerId: number;
     /**
      * 
      * @type {string}
-     * @memberof ProjectRequestBody
+     * @memberof ProjectAddRequestBody
      */
     title: string;
     /**
      * 
      * @type {string}
-     * @memberof ProjectRequestBody
+     * @memberof ProjectAddRequestBody
      */
     description: string;
 }
 
 /**
- * Check if a given object implements the ProjectRequestBody interface.
+ * Check if a given object implements the ProjectAddRequestBody interface.
  */
-export function instanceOfProjectRequestBody(value: object): value is ProjectRequestBody {
+export function instanceOfProjectAddRequestBody(value: object): value is ProjectAddRequestBody {
     if (!('ownerId' in value) || value['ownerId'] === undefined) return false;
     if (!('title' in value) || value['title'] === undefined) return false;
     if (!('description' in value) || value['description'] === undefined) return false;
     return true;
 }
 
-export function ProjectRequestBodyFromJSON(json: any): ProjectRequestBody {
-    return ProjectRequestBodyFromJSONTyped(json, false);
+export function ProjectAddRequestBodyFromJSON(json: any): ProjectAddRequestBody {
+    return ProjectAddRequestBodyFromJSONTyped(json, false);
 }
 
-export function ProjectRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): ProjectRequestBody {
+export function ProjectAddRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): ProjectAddRequestBody {
     if (json == null) {
         return json;
     }
@@ -65,11 +65,11 @@ export function ProjectRequestBodyFromJSONTyped(json: any, ignoreDiscriminator: 
     };
 }
 
-export function ProjectRequestBodyToJSON(json: any): ProjectRequestBody {
-    return ProjectRequestBodyToJSONTyped(json, false);
+export function ProjectAddRequestBodyToJSON(json: any): ProjectAddRequestBody {
+    return ProjectAddRequestBodyToJSONTyped(json, false);
 }
 
-export function ProjectRequestBodyToJSONTyped(value?: ProjectRequestBody | null, ignoreDiscriminator: boolean = false): any {
+export function ProjectAddRequestBodyToJSONTyped(value?: ProjectAddRequestBody | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

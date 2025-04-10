@@ -15,16 +15,16 @@
 
 import * as runtime from '../runtime';
 import type {
+  ProjectAddRequestBody,
   ProjectDto,
-  ProjectRequestBody,
   ProjectUpdateRequestBody,
   UserAndProjectRequestBody,
 } from '../models/index';
 import {
+    ProjectAddRequestBodyFromJSON,
+    ProjectAddRequestBodyToJSON,
     ProjectDtoFromJSON,
     ProjectDtoToJSON,
-    ProjectRequestBodyFromJSON,
-    ProjectRequestBodyToJSON,
     ProjectUpdateRequestBodyFromJSON,
     ProjectUpdateRequestBodyToJSON,
     UserAndProjectRequestBodyFromJSON,
@@ -32,7 +32,7 @@ import {
 } from '../models/index';
 
 export interface AddProjectRequest {
-    projectRequestBody: ProjectRequestBody;
+    projectAddRequestBody: ProjectAddRequestBody;
 }
 
 export interface AddUserToProjectRequest {
@@ -56,10 +56,10 @@ export class ProjectControllerApi extends runtime.BaseAPI {
     /**
      */
     async addProjectRaw(requestParameters: AddProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ProjectDto>> {
-        if (requestParameters['projectRequestBody'] == null) {
+        if (requestParameters['projectAddRequestBody'] == null) {
             throw new runtime.RequiredError(
-                'projectRequestBody',
-                'Required parameter "projectRequestBody" was null or undefined when calling addProject().'
+                'projectAddRequestBody',
+                'Required parameter "projectAddRequestBody" was null or undefined when calling addProject().'
             );
         }
 
@@ -85,7 +85,7 @@ export class ProjectControllerApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: ProjectRequestBodyToJSON(requestParameters['projectRequestBody']),
+            body: ProjectAddRequestBodyToJSON(requestParameters['projectAddRequestBody']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ProjectDtoFromJSON(jsonValue));
