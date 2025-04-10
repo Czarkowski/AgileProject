@@ -8,8 +8,13 @@ import org.springframework.security.core.AuthenticationException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.*
 import pbs.agile.webapi.auth.JwtUtil
+import pbs.agile.webapi.mappers.toLoggedUserDTO
 import pbs.agile.webapi.models.entities.User
 import pbs.agile.webapi.repositories.UserRepository
+import pbs.agile.webapi.requests.AuthTokensResponseBody
+import pbs.agile.webapi.requests.LoginRequestBody
+import pbs.agile.webapi.requests.RefreshTokenRequestBody
+import pbs.agile.webapi.requests.RegisterRequestBody
 import pbs.agile.webapi.services.AuthUserDetailsService
 
 @RestController
@@ -55,10 +60,13 @@ class AuthController(
             val token = jwtUtil.generateToken(authentication.name, roles)
             val refreshToken = jwtUtil.generateRefreshToken(request.identifier)
 
+            val userDetails = userRepository.findByUsername(authentication.name)!!
+            val loggedUser = userDetails.toLoggedUserDTO()
+
             var res: AuthTokensResponseBody = AuthTokensResponseBody(
                 token = token,
                 refreshToken = refreshToken,
-                userName = authentication.name
+                loggedUser = loggedUser,
             )
 
             ResponseEntity.status(HttpStatus.OK).body(res)
@@ -69,10 +77,10 @@ class AuthController(
     }
 
     @PostMapping("/refresh")
-    fun refreshToken(@RequestBody request: RefreshTokenRequestBody): ResponseEntity<Any> {
+    fun refreshToken(@RequestBody request: RefreshTokenRequestBody): ResponseEntity<AuthTokensResponseBody> {
         return try {
             if (!jwtUtil.isTokenValid(request.refreshToken)) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token")
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null)
             }
             val username: String = jwtUtil.extractUsername(request.refreshToken)!!
             val userDetails = userDetailsService.loadUserByUsername(username)
@@ -81,17 +89,11 @@ class AuthController(
 
             var res: AuthTokensResponseBody = AuthTokensResponseBody(
                 token = newAccessToken,
-                refreshToken = request.refreshToken,
-                userName = username
             )
             ResponseEntity.ok(res)
         } catch (e: Exception) {
-            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Token refresh failed")
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null)
         }
     }
 }
 
-data class RegisterRequestBody(val username: String, val password: String, val email: String, val first_name: String, val last_name: String)
-data class LoginRequestBody(val identifier: String, val password: String)
-data class RefreshTokenRequestBody(val refreshToken: String)
-data class AuthTokensResponseBody(val token: String, val refreshToken: String, val userName: String)

@@ -1,5 +1,6 @@
 package pbs.agile.webapi.mappers
 
+import pbs.agile.webapi.dtos.LoggedUserDto
 import pbs.agile.webapi.dtos.ProjectDto
 import pbs.agile.webapi.dtos.UserDto
 import pbs.agile.webapi.models.entities.Project
@@ -28,5 +29,15 @@ fun User.toDTO(): UserDto {
         email = this.email,
         last_name = this.last_name,
         first_name = this.first_name
+    )
+}
+
+fun User.toLoggedUserDTO(): LoggedUserDto {
+    return LoggedUserDto(
+            id = this.id ?: 0L,
+            username = this.username,
+            email = this.email,
+            last_name = this.last_name,
+            first_name = this.first_name
     )
 }
