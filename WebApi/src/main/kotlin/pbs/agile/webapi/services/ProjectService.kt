@@ -28,8 +28,8 @@ class ProjectService(@Autowired private val projectRepository: ProjectRepository
         var project: Project = Project()
         project.description = projectRequest.description
         project.title = projectRequest.title
-        project = projectRepository.save(project)
         project.owner = owner
+        project = projectRepository.save(project)
         return project.toDTO()
     }
 
