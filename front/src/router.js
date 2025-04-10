@@ -10,6 +10,7 @@ import ProjectFiles from "@/components/ProjectFiles.vue";
 import ProjectChat from "@/components/ProjectChat.vue";
 import UserSearch from "@/components/UserSearch.vue";
 import UserChat from "@/components/UserChat.vue";
+import ChatTest from "@/components/ChatTest.vue";
 
 const routes = [
     {
@@ -70,6 +71,12 @@ const routes = [
         path: '/:userid/chat',
         name: 'UserChat',
         component: UserChat,
+        props: true
+    },
+    {
+        path: '/chat-test/:projectId',
+        name: 'ChatTest',
+        component: ChatTest,
         props: true
     }
 ];

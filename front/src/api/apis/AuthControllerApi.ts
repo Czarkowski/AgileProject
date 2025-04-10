@@ -95,7 +95,7 @@ export class AuthControllerApi extends runtime.BaseAPI {
 
     /**
      */
-    async refreshTokenRaw(requestParameters: RefreshTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+    async refreshTokenRaw(requestParameters: RefreshTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AuthTokensResponseBody>> {
         if (requestParameters['refreshTokenRequestBody'] == null) {
             throw new runtime.RequiredError(
                 'refreshTokenRequestBody',
@@ -128,12 +128,12 @@ export class AuthControllerApi extends runtime.BaseAPI {
             body: RefreshTokenRequestBodyToJSON(requestParameters['refreshTokenRequestBody']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse<any>(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => AuthTokensResponseBodyFromJSON(jsonValue));
     }
 
     /**
      */
-    async refreshToken(requestParameters: RefreshTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
+    async refreshToken(requestParameters: RefreshTokenRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AuthTokensResponseBody> {
         const response = await this.refreshTokenRaw(requestParameters, initOverrides);
         return await response.value();
     }
