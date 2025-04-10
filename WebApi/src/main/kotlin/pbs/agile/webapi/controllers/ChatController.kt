@@ -4,30 +4,24 @@ import org.springframework.messaging.handler.annotation.DestinationVariable
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import pbs.agile.webapi.dtos.ChatMessageDto
-import pbs.agile.webapi.models.entities.ChatMessage
 import pbs.agile.webapi.repositories.ChatMessageRepository
+import pbs.agile.webapi.services.ChatMessageService
 
-@Controller
+@RestController
+@RequestMapping("/api/chats")
 class ChatController(
-        val messagingTemplate: SimpMessagingTemplate,
-        val chatMessageRepository: ChatMessageRepository
+    private val chatMessageService: ChatMessageService,
 ) {
-    @MessageMapping("/chat.send/{groupId}")
+
+    @GetMapping("/project-messages/{projectId}")
     fun sendToGroup(
-            @DestinationVariable groupId: String,
-            message: ChatMessageDto
-    ) {
-        val savedMessage = ChatMessage(
-                sender = message.,
-                content = message.content,
-                timestamp = message.timestamp,
-                project =
-        )
-        chatMessageRepository.save(savedMessage)
-
-
-        // tutaj możesz np. zapisać wiadomość do bazy
-        messagingTemplate.convertAndSend("/topic/chat.$groupId", message)
+        @PathVariable projectId: Long,
+    ): List<ChatMessageDto> {
+        return chatMessageService.getMessagesForProject(projectId)
     }
 }

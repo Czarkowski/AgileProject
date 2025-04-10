@@ -13,6 +13,14 @@
  */
 
 import { mapValues } from '../runtime';
+import type { LoggedUserDto } from './LoggedUserDto';
+import {
+    LoggedUserDtoFromJSON,
+    LoggedUserDtoFromJSONTyped,
+    LoggedUserDtoToJSON,
+    LoggedUserDtoToJSONTyped,
+} from './LoggedUserDto';
+
 /**
  * 
  * @export
@@ -30,13 +38,13 @@ export interface AuthTokensResponseBody {
      * @type {string}
      * @memberof AuthTokensResponseBody
      */
-    refreshToken: string;
+    refreshToken?: string;
     /**
      * 
-     * @type {string}
+     * @type {LoggedUserDto}
      * @memberof AuthTokensResponseBody
      */
-    userName: string;
+    loggedUser?: LoggedUserDto;
 }
 
 /**
@@ -44,8 +52,6 @@ export interface AuthTokensResponseBody {
  */
 export function instanceOfAuthTokensResponseBody(value: object): value is AuthTokensResponseBody {
     if (!('token' in value) || value['token'] === undefined) return false;
-    if (!('refreshToken' in value) || value['refreshToken'] === undefined) return false;
-    if (!('userName' in value) || value['userName'] === undefined) return false;
     return true;
 }
 
@@ -60,8 +66,8 @@ export function AuthTokensResponseBodyFromJSONTyped(json: any, ignoreDiscriminat
     return {
         
         'token': json['token'],
-        'refreshToken': json['refreshToken'],
-        'userName': json['userName'],
+        'refreshToken': json['refreshToken'] == null ? undefined : json['refreshToken'],
+        'loggedUser': json['loggedUser'] == null ? undefined : LoggedUserDtoFromJSON(json['loggedUser']),
     };
 }
 
@@ -78,7 +84,7 @@ export function AuthTokensResponseBodyToJSONTyped(value?: AuthTokensResponseBody
         
         'token': value['token'],
         'refreshToken': value['refreshToken'],
-        'userName': value['userName'],
+        'loggedUser': LoggedUserDtoToJSON(value['loggedUser']),
     };
 }
 

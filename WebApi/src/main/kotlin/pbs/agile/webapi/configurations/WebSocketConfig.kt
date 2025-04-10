@@ -9,7 +9,7 @@ import org.springframework.messaging.simp.config.MessageBrokerRegistry
 
 @Configuration
 @EnableWebSocketMessageBroker
-class WebSocketConfig : WebSocketMessageBrokerConfigurer () {
+class WebSocketConfig : WebSocketMessageBrokerConfigurer {
     override fun configureMessageBroker(config: MessageBrokerRegistry) {
         config.enableSimpleBroker("/topic") // kanał do subskrypcji
         config.setApplicationDestinationPrefixes("/app") // prefix do wysyłania

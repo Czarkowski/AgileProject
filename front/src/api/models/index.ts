@@ -1,6 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export * from './AuthTokensResponseBody';
+export * from './ChatMessageDto';
+export * from './LoggedUserDto';
 export * from './LoginRequestBody';
 export * from './ProjectAddRequestBody';
 export * from './ProjectDto';
