@@ -1,8 +1,10 @@
 package pbs.agile.webapi.mappers
 
+import pbs.agile.webapi.dtos.ChatMessageDto
 import pbs.agile.webapi.dtos.LoggedUserDto
 import pbs.agile.webapi.dtos.ProjectDto
 import pbs.agile.webapi.dtos.UserDto
+import pbs.agile.webapi.models.entities.ChatMessage
 import pbs.agile.webapi.models.entities.Project
 import pbs.agile.webapi.models.entities.User
 
@@ -39,5 +41,13 @@ fun User.toLoggedUserDTO(): LoggedUserDto {
             email = this.email,
             last_name = this.last_name,
             first_name = this.first_name
+    )
+}
+
+fun ChatMessage.toDTO(): ChatMessageDto {
+    return ChatMessageDto(
+        senderId = this.sender.id!!,
+        content = this.content,
+        timestamp = this.timestamp,
     )
 }
