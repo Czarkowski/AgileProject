@@ -14,8 +14,8 @@ import pbs.agile.webapi.models.entities.Project
 import pbs.agile.webapi.models.entities.User
 import pbs.agile.webapi.repositories.ProjectRepository
 import pbs.agile.webapi.repositories.UserRepository
-import pbs.agile.webapi.requests.ProjectRequest
-import pbs.agile.webapi.requests.ProjectUpdateRequest
+import pbs.agile.webapi.requests.ProjectAddRequestBody
+import pbs.agile.webapi.requests.ProjectUpdateRequestBody
 import pbs.agile.webapi.services.ProjectService
 import java.util.*
 
@@ -45,7 +45,7 @@ class ProjectServiceTest {
     @Test
     fun `should add project`() {
         val user = User(id = 1L, username = "testuser", password = "pass", email = "test@example.com", first_name = "Test", last_name = "User")
-        val projectRequest = ProjectRequest(ownerId = 1L, title = "New Project", description = "New Description")
+        val projectRequest = ProjectAddRequestBody(ownerId = 1L, title = "New Project", description = "New Description")
         val project = Project(id = 1L, title = "New Project", description = "New Description", owner = user, users = mutableListOf())
 
         `when`(userRepository.findById(1L)).thenReturn(Optional.of(user))
@@ -114,7 +114,7 @@ class ProjectServiceTest {
     @Test
     fun `should update project`() {
         val project = Project(id = 1L, title = "Old Title", description = "Old Description", owner = null, users = mutableListOf())
-        val updateRequest = ProjectUpdateRequest(title = "New Title", description = "New Description")
+        val updateRequest = ProjectUpdateRequestBody(title = "New Title", description = "New Description")
 
         `when`(projectRepository.findById(1L)).thenReturn(Optional.of(project))
         `when`(projectRepository.save(any(Project::class.java))).thenReturn(project)
