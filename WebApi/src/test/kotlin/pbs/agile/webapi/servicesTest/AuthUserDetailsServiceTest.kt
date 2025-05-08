@@ -28,8 +28,8 @@ class AuthUserDetailsServiceTest {
             username = "testuser",
             password = "password123",
             email = "test@example.com",
-            first_name = "Test",
-            last_name = "User"
+            firstName = "Test",
+            lastName = "User"
         )
         `when`(userRepository.findByUsernameOrEmail("testuser")).thenReturn(user)
 

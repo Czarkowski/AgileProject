@@ -24,6 +24,8 @@ import {
 
 export interface SendToGroupRequest {
     projectId: number;
+    dateFrom: Date;
+    dateTo: Date;
 }
 
 /**
@@ -41,7 +43,29 @@ export class ChatControllerApi extends runtime.BaseAPI {
             );
         }
 
+        if (requestParameters['dateFrom'] == null) {
+            throw new runtime.RequiredError(
+                'dateFrom',
+                'Required parameter "dateFrom" was null or undefined when calling sendToGroup().'
+            );
+        }
+
+        if (requestParameters['dateTo'] == null) {
+            throw new runtime.RequiredError(
+                'dateTo',
+                'Required parameter "dateTo" was null or undefined when calling sendToGroup().'
+            );
+        }
+
         const queryParameters: any = {};
+
+        if (requestParameters['dateFrom'] != null) {
+            queryParameters['dateFrom'] = (requestParameters['dateFrom'] as any).toISOString();
+        }
+
+        if (requestParameters['dateTo'] != null) {
+            queryParameters['dateTo'] = (requestParameters['dateTo'] as any).toISOString();
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 

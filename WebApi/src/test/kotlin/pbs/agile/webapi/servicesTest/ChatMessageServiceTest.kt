@@ -39,8 +39,8 @@ class ChatMessageServiceTest {
             username = "john",
             password = "pass",
             email = "john@example.com",
-            first_name = "John",
-            last_name = "Doe"
+            firstName = "John",
+            lastName = "Doe"
         )
         val project = Project(
             id = 1,
@@ -93,8 +93,8 @@ class ChatMessageServiceTest {
             username = "john",
             password = "pass",
             email = "john@example.com",
-            first_name = "John",
-            last_name = "Doe"
+            firstName = "John",
+            lastName = "Doe"
         )
         val dto = ChatMessageDto(senderId = 1, content = "Hello", timestamp = "2024-01-01T10:00:00")
 
@@ -115,8 +115,8 @@ class ChatMessageServiceTest {
             username = "john",
             password = "pass",
             email = "john@example.com",
-            first_name = "John",
-            last_name = "Doe"
+            firstName = "John",
+            lastName = "Doe"
         )
         val project = Project(
             id = 1,
