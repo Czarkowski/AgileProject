@@ -33,10 +33,10 @@ export interface ChatMessageDto {
     content: string;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof ChatMessageDto
      */
-    timestamp: string;
+    timestamp: Date;
 }
 
 /**
@@ -61,7 +61,7 @@ export function ChatMessageDtoFromJSONTyped(json: any, ignoreDiscriminator: bool
         
         'senderId': json['senderId'],
         'content': json['content'],
-        'timestamp': json['timestamp'],
+        'timestamp': (new Date(json['timestamp'])),
     };
 }
 
@@ -78,7 +78,7 @@ export function ChatMessageDtoToJSONTyped(value?: ChatMessageDto | null, ignoreD
         
         'senderId': value['senderId'],
         'content': value['content'],
-        'timestamp': value['timestamp'],
+        'timestamp': ((value['timestamp']).toISOString()),
     };
 }
 

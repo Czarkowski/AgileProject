@@ -15,6 +15,14 @@ import pbs.agile.webapi.models.entities.User
 //    }.filterNotNull() // Usuń wartości null, jeśli metoda toDTO nie istniała
 //}
 
+//inline fun <reified T : Any, reified R> Collection<T>.mapToDto(): List<R> {
+//    val mapper = T::class.members
+//        .firstOrNull { it.name == "toDTO" }
+//    return this.mapNotNull { item ->
+//        mapper!!.call(item) as? R
+//    }
+//}
+
 
 fun Project.toDTO(): ProjectDto {
     return ProjectDto(
@@ -29,8 +37,8 @@ fun User.toDTO(): UserDto {
         id = this.id ?: 0L,
         username = this.username,
         email = this.email,
-        last_name = this.last_name,
-        first_name = this.first_name
+        last_name = this.lastName,
+        first_name = this.firstName
     )
 }
 
@@ -39,8 +47,8 @@ fun User.toLoggedUserDTO(): LoggedUserDto {
             id = this.id ?: 0L,
             username = this.username,
             email = this.email,
-            last_name = this.last_name,
-            first_name = this.first_name
+            last_name = this.lastName,
+            first_name = this.firstName
     )
 }
 
