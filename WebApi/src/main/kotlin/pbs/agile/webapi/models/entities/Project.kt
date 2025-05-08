@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
 import org.hibernate.internal.util.collections.CollectionHelper.listOf
+import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.UpdateTimestamp
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "Projects")
@@ -34,6 +37,19 @@ data class Project(
         inverseJoinColumns = [JoinColumn(name = "user_id")]
     )
     var users: MutableList<User> = listOf<User>(),
+
+    // --- NOWE POLA DAT /Szymon---
+    @CreationTimestamp
+    @Column(name = "creation_date", nullable = false, updatable = false)
+    var creationDate: LocalDateTime? = null,
+
+    @UpdateTimestamp
+    @Column(name = "modification_date", nullable = false)
+    var modificationDate: LocalDateTime? = null,
+
+    @Column(name = "completion_date")
+    var completionDate: LocalDateTime? = null
+    // --- KONIEC NOWYCH PÓL DAT /Szymon---
 )
 {
     constructor(): this(null, "", "", null)

@@ -59,4 +59,26 @@ class ProjectController(@Autowired private val projectService: ProjectService) {
             ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
         }
     }
+
+    // --- NOWE ENDPOINTY /szymon---
+    @PostMapping("/{projectId}/complete")
+    fun completeProject(@PathVariable projectId: Long): ResponseEntity<ProjectDto> {
+        return try {
+            val updatedProjectDto = projectService.markProjectAsCompleted(projectId)
+            ResponseEntity.ok(updatedProjectDto)
+        } catch (e: EntityNotFoundException) {
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body(null) // Lub JSON z komunikatem błędu
+        }
+    }
+
+    @PostMapping("/{projectId}/uncomplete")
+    fun uncompleteProject(@PathVariable projectId: Long): ResponseEntity<ProjectDto> {
+        return try {
+            val updatedProjectDto = projectService.markProjectAsUncompleted(projectId)
+            ResponseEntity.ok(updatedProjectDto)
+        } catch (e: EntityNotFoundException) {
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body(null) // Lub JSON z komunikatem błędu
+        }
+    }
+    // --- KONIEC NOWYCH ENDPOINTÓW /szymon---
 }
