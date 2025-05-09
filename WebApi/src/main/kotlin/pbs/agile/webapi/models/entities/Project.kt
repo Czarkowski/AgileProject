@@ -38,7 +38,6 @@ data class Project(
     )
     var users: MutableList<User> = listOf<User>(),
 
-    // --- NOWE POLA DAT /Szymon---
     @CreationTimestamp
     @Column(name = "creation_date", nullable = false, updatable = false)
     var creationDate: LocalDateTime? = null,
@@ -49,7 +48,6 @@ data class Project(
 
     @Column(name = "completion_date")
     var completionDate: LocalDateTime? = null
-    // --- KONIEC NOWYCH PÓL DAT /Szymon---
 )
 {
     constructor(): this(null, "", "", null)
