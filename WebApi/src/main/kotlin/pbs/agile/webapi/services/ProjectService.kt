@@ -12,6 +12,7 @@ import pbs.agile.webapi.repositories.ProjectRepository
 import pbs.agile.webapi.repositories.UserRepository
 import pbs.agile.webapi.requests.ProjectAddRequestBody
 import pbs.agile.webapi.requests.ProjectUpdateRequestBody
+import java.time.LocalDateTime
 
 @Service
 class ProjectService(@Autowired private val projectRepository: ProjectRepository,
@@ -80,6 +81,26 @@ class ProjectService(@Autowired private val projectRepository: ProjectRepository
         project.description = updateRequest.description
 
         projectRepository.save(project)  // Hibernate automatycznie zapisze zmiany dzięki @Transactional
+    }
+
+    @Transactional
+    fun markProjectAsCompleted(projectId: Long): ProjectDto {
+        val project = projectRepository.findById(projectId)
+            .orElseThrow { EntityNotFoundException("Project with ID $projectId not found") }
+
+        project.completionDate = LocalDateTime.now()
+        val updatedProject = projectRepository.save(project) // Jawne save dla pewności i pobrania zaktualizowanej encji
+        return updatedProject.toDTO()
+    }
+
+    @Transactional
+    fun markProjectAsUncompleted(projectId: Long): ProjectDto {
+        val project = projectRepository.findById(projectId)
+            .orElseThrow { EntityNotFoundException("Project with ID $projectId not found") }
+
+        project.completionDate = null
+        val updatedProject = projectRepository.save(project)
+        return updatedProject.toDTO()
     }
 }
 
