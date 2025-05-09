@@ -22,7 +22,7 @@ data class User(
     @field:NotNull
     @field:Size(min = 6)
     @Column(nullable = false)
-    val password: String,
+    var password: String,
 
     @field:NotNull
     @field:Email
@@ -32,12 +32,12 @@ data class User(
     @field:NotNull
     @field:Size(min = 2, max = 50)
     @Column(nullable = false, unique = false)
-    val first_name: String,
+    var firstName: String,
 
     @field:NotNull
     @field:Size(min = 2, max = 50)
     @Column(nullable = false, unique = false)
-    val last_name: String,
+    var lastName: String,
 
     @ManyToMany(mappedBy = "users")
     val projects: MutableList<Project> = listOf<Project>(),

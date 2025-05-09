@@ -5,16 +5,14 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.AuthenticationException
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.*
 import pbs.agile.webapi.auth.JwtUtil
 import pbs.agile.webapi.mappers.toLoggedUserDTO
 import pbs.agile.webapi.models.entities.User
 import pbs.agile.webapi.repositories.UserRepository
-import pbs.agile.webapi.requests.AuthTokensResponseBody
-import pbs.agile.webapi.requests.LoginRequestBody
-import pbs.agile.webapi.requests.RefreshTokenRequestBody
-import pbs.agile.webapi.requests.RegisterRequestBody
+import pbs.agile.webapi.requests.*
 import pbs.agile.webapi.services.AuthUserDetailsService
 
 @RestController
@@ -93,6 +91,23 @@ class AuthController(
             ResponseEntity.ok(res)
         } catch (e: Exception) {
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null)
+        }
+    }
+
+    @PostMapping("/change-password")
+    fun changePassword(@RequestBody request: ChangePasswordRequestBody): ResponseEntity<Boolean> {
+        return try {
+            val authentication = authenticationManager.authenticate(
+                UsernamePasswordAuthenticationToken(request.identifier, request.oldPassword)
+            )
+            val user = userRepository.findByUsername(authentication.name)
+                ?: throw UsernameNotFoundException("User not found: ${authentication.name}")
+
+            user.password = passwordEncoder.encode(request.newPassword)
+            userRepository.save(user)
+            ResponseEntity.ok(true)
+        } catch (e: Exception) {
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false)
         }
     }
 }

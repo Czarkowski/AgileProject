@@ -9,7 +9,6 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
-import pbs.agile.webapi.dtos.ProjectDto
 import pbs.agile.webapi.models.entities.Project
 import pbs.agile.webapi.models.entities.User
 import pbs.agile.webapi.repositories.ProjectRepository
@@ -44,7 +43,7 @@ class ProjectServiceTest {
 
     @Test
     fun `should add project`() {
-        val user = User(id = 1L, username = "testuser", password = "pass", email = "test@example.com", first_name = "Test", last_name = "User")
+        val user = User(id = 1L, username = "testuser", password = "pass", email = "test@example.com", firstName = "Test", lastName = "User")
         val projectRequest = ProjectAddRequestBody(ownerId = 1L, title = "New Project", description = "New Description")
         val project = Project(id = 1L, title = "New Project", description = "New Description", owner = user, users = mutableListOf())
 
@@ -59,7 +58,7 @@ class ProjectServiceTest {
 
     @Test
     fun `should add user to project`() {
-        val user = User(id = 2L, username = "testuser2", password = "pass", email = "test2@example.com", first_name = "Test", last_name = "User")
+        val user = User(id = 2L, username = "testuser2", password = "pass", email = "test2@example.com", firstName = "Test", lastName = "User")
         val project = Project(id = 1L, title = "Project", description = "Desc", owner = null, users = mutableListOf())
 
         `when`(projectRepository.findById(1L)).thenReturn(Optional.of(project))
@@ -72,7 +71,7 @@ class ProjectServiceTest {
 
     @Test
     fun `should throw EntityExistsException when user already in project`() {
-        val user = User(id = 2L, username = "testuser2", password = "pass", email = "test2@example.com", first_name = "Test", last_name = "User")
+        val user = User(id = 2L, username = "testuser2", password = "pass", email = "test2@example.com", firstName = "Test", lastName = "User")
         val project = Project(id = 1L, title = "Project", description = "Desc", owner = null, users = mutableListOf(user))
 
         `when`(projectRepository.findById(1L)).thenReturn(Optional.of(project))
@@ -86,7 +85,7 @@ class ProjectServiceTest {
 
     @Test
     fun `should delete user from project`() {
-        val user = User(id = 2L, username = "testuser2", password = "pass", email = "test2@example.com", first_name = "Test", last_name = "User")
+        val user = User(id = 2L, username = "testuser2", password = "pass", email = "test2@example.com", firstName = "Test", lastName = "User")
         val project = Project(id = 1L, title = "Project", description = "Desc", owner = null, users = mutableListOf(user))
 
         `when`(projectRepository.findById(1L)).thenReturn(Optional.of(project))
@@ -99,7 +98,7 @@ class ProjectServiceTest {
 
     @Test
     fun `should throw EntityNotFoundException when user not in project`() {
-        val user = User(id = 2L, username = "testuser2", password = "pass", email = "test2@example.com", first_name = "Test", last_name = "User")
+        val user = User(id = 2L, username = "testuser2", password = "pass", email = "test2@example.com", firstName = "Test", lastName = "User")
         val project = Project(id = 1L, title = "Project", description = "Desc", owner = null, users = mutableListOf())
 
         `when`(projectRepository.findById(1L)).thenReturn(Optional.of(project))

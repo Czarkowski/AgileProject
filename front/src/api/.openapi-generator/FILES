@@ -5,6 +5,7 @@ apis/UserControllerApi.ts
 apis/index.ts
 index.ts
 models/AuthTokensResponseBody.ts
+models/ChangePasswordRequestBody.ts
 models/ChatMessageDto.ts
 models/LoggedUserDto.ts
 models/LoginRequestBody.ts
@@ -15,5 +16,6 @@ models/RefreshTokenRequestBody.ts
 models/RegisterRequestBody.ts
 models/UserAndProjectRequestBody.ts
 models/UserDto.ts
+models/UserUpdateRequestBody.ts
 models/index.ts
 runtime.ts

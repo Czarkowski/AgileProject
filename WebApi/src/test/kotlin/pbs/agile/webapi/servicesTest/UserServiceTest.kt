@@ -9,11 +9,8 @@ import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
 import pbs.agile.webapi.models.entities.User
-import pbs.agile.webapi.dtos.UserDto
 import pbs.agile.webapi.repositories.UserRepository
-import pbs.agile.webapi.mappers.toDTO
 import pbs.agile.webapi.services.UserService
-import java.util.*
 
 
 @ExtendWith(MockitoExtension::class)
@@ -34,8 +31,8 @@ class UserServiceTest {
             username = "testuser",
             password = "password123",
             email = "test@example.com",
-            first_name = "Test",
-            last_name = "User"
+            firstName = "Test",
+            lastName = "User"
         )
     }
 

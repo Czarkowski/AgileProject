@@ -8,6 +8,9 @@ import pbs.agile.webapi.models.entities.ChatMessage
 import pbs.agile.webapi.repositories.ChatMessageRepository
 import pbs.agile.webapi.repositories.ProjectRepository
 import pbs.agile.webapi.repositories.UserRepository
+import java.sql.Timestamp
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Service
 class ChatMessageService(
@@ -35,8 +38,8 @@ class ChatMessageService(
         return savedMessage.toDTO()
     }
 
-    fun getMessagesForProject(projectId: Long): List<ChatMessageDto> {
-        val messages = chatMessageRepository.findByProject_Id(projectId)
+    fun getMessagesForProject(projectId: Long, dateFrom: LocalDateTime, dateTo: LocalDateTime): List<ChatMessageDto> {
+        val messages = chatMessageRepository.findByProjectIdAndDateRange(projectId, dateFrom, dateTo)
         return messages.map { it.toDTO() }
     }
 }
