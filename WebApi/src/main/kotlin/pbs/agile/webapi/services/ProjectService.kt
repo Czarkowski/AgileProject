@@ -83,7 +83,6 @@ class ProjectService(@Autowired private val projectRepository: ProjectRepository
         projectRepository.save(project)  // Hibernate automatycznie zapisze zmiany dzięki @Transactional
     }
 
-    // --- NOWE METODY /szymon---
     @Transactional
     fun markProjectAsCompleted(projectId: Long): ProjectDto {
         val project = projectRepository.findById(projectId)
@@ -103,7 +102,6 @@ class ProjectService(@Autowired private val projectRepository: ProjectRepository
         val updatedProject = projectRepository.save(project)
         return updatedProject.toDTO()
     }
-    // --- KONIEC NOWYCH METOD /szymon---
 }
 
 

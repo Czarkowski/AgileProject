@@ -60,7 +60,6 @@ class ProjectController(@Autowired private val projectService: ProjectService) {
         }
     }
 
-    // --- NOWE ENDPOINTY /szymon---
     @PostMapping("/{projectId}/complete")
     fun completeProject(@PathVariable projectId: Long): ResponseEntity<ProjectDto> {
         return try {
@@ -80,5 +79,4 @@ class ProjectController(@Autowired private val projectService: ProjectService) {
             ResponseEntity.status(HttpStatus.NOT_FOUND).body(null) // Lub JSON z komunikatem błędu
         }
     }
-    // --- KONIEC NOWYCH ENDPOINTÓW /szymon---
 }
