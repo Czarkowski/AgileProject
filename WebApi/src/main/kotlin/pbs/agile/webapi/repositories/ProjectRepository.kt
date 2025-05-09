@@ -16,8 +16,8 @@ interface ProjectRepository : JpaRepository<Project, Long> {
         """
         SELECT p FROM Project p 
         WHERE p.owner.id = :userId 
-           OR :userId IN (SELECT u.id FROM p.users u)
+           OR :memberId IN (SELECT u.id FROM p.users u)
         """
     )
-    fun findAllByUserAssociation(@Param("userId") userId: Long): List<Project>
+    fun findAllByUserAssociation(@Param("userId") userId: Long?, @Param("memberId") memberId: Long?): List<Project>
 }
