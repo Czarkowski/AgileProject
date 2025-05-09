@@ -66,7 +66,7 @@ class ProjectController(@Autowired private val projectService: ProjectService) {
             val updatedProjectDto = projectService.markProjectAsCompleted(projectId)
             ResponseEntity.ok(updatedProjectDto)
         } catch (e: EntityNotFoundException) {
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body(null) // Lub JSON z komunikatem błędu
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse("Project not found", e.message))
         }
     }
 
