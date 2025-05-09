@@ -11,4 +11,13 @@ import pbs.agile.webapi.models.entities.User
 interface ProjectRepository : JpaRepository<Project, Long> {
     fun findAllByTitle(projectName: String): List<Project>
     fun findAllByUsers_Id(userId: Long): List<Project>
+
+    @Query(
+        """
+        SELECT p FROM Project p 
+        WHERE p.owner.id = :userId 
+           OR :userId IN (SELECT u.id FROM p.users u)
+        """
+    )
+    fun findAllByUserAssociation(@Param("userId") userId: Long): List<Project>
 }

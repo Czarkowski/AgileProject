@@ -19,7 +19,9 @@ import java.time.LocalDateTime
 class ProjectController(@Autowired private val projectService: ProjectService) {
 
     @GetMapping
-    fun getAllProjects(): List<ProjectDto> = projectService.getAllProjects()
+    fun getAllProjects(
+        @RequestParam(required = false) userId: Long?
+    ): List<ProjectDto> = projectService.getAllProjects(userId)
 
     @PostMapping
     fun addProject(@RequestBody project: ProjectAddRequestBody): ProjectDto {
@@ -63,30 +65,22 @@ class ProjectController(@Autowired private val projectService: ProjectService) {
     }
 
     @PostMapping("/{projectId}/complete")
-    fun completeProject(@PathVariable projectId: Long): ResponseEntity<Any> {
+    fun completeProject(@PathVariable projectId: Long): ResponseEntity<ProjectDto> {
         return try {
             val updatedProjectDto = projectService.markProjectAsCompleted(projectId)
             ResponseEntity.ok(updatedProjectDto)
         } catch (e: EntityNotFoundException) {
-            val errorDetails = ErrorResponse(
-                error = "Not Found",
-                details = e.message ?: "Project with ID $projectId not found"
-            )
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDetails)
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body(null)
         }
     }
 
     @PostMapping("/{projectId}/uncomplete")
-    fun uncompleteProject(@PathVariable projectId: Long): ResponseEntity<Any> {
+    fun uncompleteProject(@PathVariable projectId: Long): ResponseEntity<ProjectDto> {
         return try {
             val updatedProjectDto = projectService.markProjectAsUncompleted(projectId)
             ResponseEntity.ok(updatedProjectDto)
         } catch (e: EntityNotFoundException) {
-            val errorDetails = ErrorResponse(
-                error = "Not Found",
-                details = e.message ?: "Project with ID $projectId not found"
-            )
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDetails)
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body(null)
         }
     }
 }

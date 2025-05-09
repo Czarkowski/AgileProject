@@ -18,10 +18,13 @@ import java.time.LocalDateTime
 class ProjectService(@Autowired private val projectRepository: ProjectRepository,
                      @Autowired private val userRepository: UserRepository) {
 
-    fun getAllProjects(): List<ProjectDto> {
-        var projects: List<Project> = projectRepository.findAll();
-        var res = projects.stream().map { it.toDTO() } .toList();
-        return res;
+    fun getAllProjects(userId: Long? = null): List<ProjectDto> {
+        val projects: List<Project> = if (userId != null) {
+            projectRepository.findAllByUserAssociation(userId)
+        } else {
+            projectRepository.findAll()
+        }
+        return projects.map { it.toDTO() }
     }
 
     fun addProject(projectRequest: ProjectAddRequestBody): ProjectDto{
