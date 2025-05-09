@@ -10,6 +10,8 @@ import pbs.agile.webapi.requests.UserAndProjectRequestBody
 import pbs.agile.webapi.requests.ProjectAddRequestBody
 import pbs.agile.webapi.requests.ProjectUpdateRequestBody
 import pbs.agile.webapi.services.ProjectService
+import pbs.agile.webapi.responses.ErrorResponse
+import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/api/projects")
@@ -61,22 +63,30 @@ class ProjectController(@Autowired private val projectService: ProjectService) {
     }
 
     @PostMapping("/{projectId}/complete")
-    fun completeProject(@PathVariable projectId: Long): ResponseEntity<ProjectDto> {
+    fun completeProject(@PathVariable projectId: Long): ResponseEntity<Any> {
         return try {
             val updatedProjectDto = projectService.markProjectAsCompleted(projectId)
             ResponseEntity.ok(updatedProjectDto)
         } catch (e: EntityNotFoundException) {
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body(null) // Lub JSON z komunikatem błędu
+            val errorDetails = ErrorResponse(
+                error = "Not Found",
+                details = e.message ?: "Project with ID $projectId not found"
+            )
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDetails)
         }
     }
 
     @PostMapping("/{projectId}/uncomplete")
-    fun uncompleteProject(@PathVariable projectId: Long): ResponseEntity<ProjectDto> {
+    fun uncompleteProject(@PathVariable projectId: Long): ResponseEntity<Any> {
         return try {
             val updatedProjectDto = projectService.markProjectAsUncompleted(projectId)
             ResponseEntity.ok(updatedProjectDto)
         } catch (e: EntityNotFoundException) {
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body(null) // Lub JSON z komunikatem błędu
+            val errorDetails = ErrorResponse(
+                error = "Not Found",
+                details = e.message ?: "Project with ID $projectId not found"
+            )
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDetails)
         }
     }
 }
