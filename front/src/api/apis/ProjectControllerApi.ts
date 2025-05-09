@@ -48,7 +48,8 @@ export interface DeleteUserFromProjectRequest {
 }
 
 export interface GetAllProjectsRequest {
-    userId?: number;
+    ownerId?: number;
+    memberId?: number;
 }
 
 export interface UncompleteProjectRequest {
@@ -247,8 +248,12 @@ export class ProjectControllerApi extends runtime.BaseAPI {
     async getAllProjectsRaw(requestParameters: GetAllProjectsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<ProjectDto>>> {
         const queryParameters: any = {};
 
-        if (requestParameters['userId'] != null) {
-            queryParameters['userId'] = requestParameters['userId'];
+        if (requestParameters['ownerId'] != null) {
+            queryParameters['ownerId'] = requestParameters['ownerId'];
+        }
+
+        if (requestParameters['memberId'] != null) {
+            queryParameters['memberId'] = requestParameters['memberId'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

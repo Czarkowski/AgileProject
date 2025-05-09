@@ -10,8 +10,6 @@ import pbs.agile.webapi.requests.UserAndProjectRequestBody
 import pbs.agile.webapi.requests.ProjectAddRequestBody
 import pbs.agile.webapi.requests.ProjectUpdateRequestBody
 import pbs.agile.webapi.services.ProjectService
-import pbs.agile.webapi.responses.ErrorResponse
-import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/api/projects")
@@ -20,8 +18,9 @@ class ProjectController(@Autowired private val projectService: ProjectService) {
 
     @GetMapping
     fun getAllProjects(
-        @RequestParam(required = false) userId: Long?
-    ): List<ProjectDto> = projectService.getAllProjects(userId)
+        @RequestParam(required = false) ownerId: Long?,
+        @RequestParam(required = false) memberId: Long?,
+    ): List<ProjectDto> = projectService.getAllProjects(ownerId, memberId)
 
     @PostMapping
     fun addProject(@RequestBody project: ProjectAddRequestBody): ProjectDto {

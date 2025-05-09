@@ -35,7 +35,7 @@ class ProjectServiceTest {
         val project = Project(id = 1L, title = "Test Project", description = "Test Description", owner = null, users = mutableListOf())
         `when`(projectRepository.findAll()).thenReturn(listOf(project))
 
-        val projects = projectService.getAllProjects()
+        val projects = projectService.getAllProjects(memberId = memberId)
 
         assertEquals(1, projects.size)
         assertEquals("Test Project", projects[0].title)

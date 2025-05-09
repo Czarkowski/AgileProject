@@ -18,9 +18,9 @@ import java.time.LocalDateTime
 class ProjectService(@Autowired private val projectRepository: ProjectRepository,
                      @Autowired private val userRepository: UserRepository) {
 
-    fun getAllProjects(userId: Long? = null): List<ProjectDto> {
-        val projects: List<Project> = if (userId != null) {
-            projectRepository.findAllByUserAssociation(userId)
+    fun getAllProjects(ownerId: Long? = null, memberId: Long? = null): List<ProjectDto> {
+        val projects: List<Project> = if ((ownerId != null) or (memberId != null)) {
+            projectRepository.findAllByUserAssociation(ownerId, memberId)
         } else {
             projectRepository.findAll()
         }
