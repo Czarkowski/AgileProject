@@ -11,8 +11,7 @@ data class ErrorLog (
     val id: Long = 0,
 
     @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    val timestamp: LocalDateTime = LocalDateTime.now(),
+    val timestamp: LocalDateTime,
 
     @Column(name = "error_type", nullable = false)
     val errorType: String,

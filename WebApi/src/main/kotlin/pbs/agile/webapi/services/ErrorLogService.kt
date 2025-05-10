@@ -14,10 +14,19 @@ class ErrorLogService(
         val errorLog = ErrorLog(
             timestamp = LocalDateTime.now(),
             errorType = e::class.simpleName ?: "Unknown Exception",
-            message = e.message ?: "No error message",
+            message = sanitizeMessage(e.message),
             stackTrace = e.stackTraceToString(),
             cause = e.cause?.toString()
         )
         errorLogRepository.save(errorLog)
+    }
+
+    private fun sanitizeMessage(message: String?): String {
+        if (message == null) return "No error message"
+
+        return message
+            .replace(Regex("(?i)password=[^&\\s]+"), "password=***")
+            .replace(Regex("(?i)token=[^&\\s]+"), "token=***")
+            .replace(Regex("(?i)secret=[^&\\s]+"), "secret=***")
     }
 }
