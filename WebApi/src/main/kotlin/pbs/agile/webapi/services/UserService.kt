@@ -56,8 +56,8 @@ class UserService(@Autowired private val userRepository: UserRepository) {
         val user = userRepository.findByUsername(username)
             ?: throw NoSuchElementException("Użytkownik o nazwie '$username' nie istnieje")
 
-        request.firstName?.let { user.firstName = it }
-        request.lastName?.let { user.lastName = it }
+        request.firstName.let { user.firstName = it }
+        request.lastName.let { user.lastName = it }
 
         userRepository.save(user)
 

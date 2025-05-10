@@ -13,6 +13,7 @@ import pbs.agile.webapi.repositories.ChatMessageRepository
 import pbs.agile.webapi.repositories.ProjectRepository
 import pbs.agile.webapi.repositories.UserRepository
 import pbs.agile.webapi.services.ChatMessageService
+import java.time.LocalDateTime
 import java.util.*
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -51,7 +52,7 @@ class ChatMessageServiceTest {
         val dto = ChatMessageDto(
             senderId = 1,
             content = "Hello",
-            timestamp = "2024-01-01T10:00:00"
+            timestamp = LocalDateTime.parse("2024-01-01T10:00:00")
         )
 
         `when`(userRepository.findById(1)).thenReturn(Optional.of(user))
@@ -70,13 +71,13 @@ class ChatMessageServiceTest {
         val result = chatMessageService.saveChatMessage(dto, 10)
 
         assertEquals("Hello", result.content)
-        assertEquals("2024-01-01T10:00:00", result.timestamp)
+        assertEquals(LocalDateTime.parse("2024-01-01T10:00:00"), result.timestamp)
         assertEquals(1, result.senderId)
     }
 
     @Test
     fun `should throw when user not found`() {
-        val dto = ChatMessageDto(senderId = 999, content = "Hello", timestamp = "2024-01-01T10:00:00")
+        val dto = ChatMessageDto(senderId = 999, content = "Hello", timestamp = LocalDateTime.parse("2024-01-01T10:00:00"))
         `when`(userRepository.findById(999)).thenReturn(Optional.empty())
 
         val exception = assertThrows<UsernameNotFoundException> {
@@ -96,7 +97,7 @@ class ChatMessageServiceTest {
             firstName = "John",
             lastName = "Doe"
         )
-        val dto = ChatMessageDto(senderId = 1, content = "Hello", timestamp = "2024-01-01T10:00:00")
+        val dto = ChatMessageDto(senderId = 1, content = "Hello", timestamp = LocalDateTime.parse("2024-01-01T10:00:00"))
 
         `when`(userRepository.findById(1)).thenReturn(Optional.of(user))
         `when`(projectRepository.findById(10)).thenReturn(Optional.empty())
@@ -127,18 +128,18 @@ class ChatMessageServiceTest {
         val message = ChatMessage(
             id = 101,
             content = "Test message",
-            timestamp = "2024-01-01T10:00:00",
+            timestamp = LocalDateTime.parse("2024-01-01T10:00:00"),
             sender = user,
             project = project
         )
 
         `when`(chatMessageRepository.findByProject_Id(10)).thenReturn(listOf(message))
 
-        val result = chatMessageService.getMessagesForProject(10)
+        val result = chatMessageService.getMessagesForProject(10, LocalDateTime.MIN, LocalDateTime.MAX)
 
         assertEquals(1, result.size)
         assertEquals("Test message", result[0].content)
-        assertEquals("2024-01-01T10:00:00", result[0].timestamp)
+        assertEquals(LocalDateTime.parse("2024-01-01T10:00:00"), result[0].timestamp)
         assertEquals(1, result[0].senderId)
     }
 }

@@ -1,13 +1,14 @@
-package pbs.agile.webapi.controllers
+package pbs.agile.webapi.exceptions
 
+import io.swagger.v3.oas.annotations.Hidden
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import pbs.agile.webapi.services.ErrorLogService
 
+@Hidden
 @RestControllerAdvice(annotations = [RestController::class])
 class GlobalExceptionHandler(
     private val logErrorService: ErrorLogService
@@ -15,14 +16,11 @@ class GlobalExceptionHandler(
 
     @ExceptionHandler(Exception::class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    fun handleAllException(e: Exception): Map<String, String> {
+    fun handleAllException(e: Exception): ErrorResponse {
         logErrorService.logException(e)
 
-        return mapOf(
-            "error" to (e::class.simpleName ?: "Exception"),
-            "message" to (e.message ?: "Unexpected error occurred")
-        )
+        return ErrorResponse(e::class.simpleName ?: "Exception",e.message ?: "Unknown error")
     }
-
-
 }
+
+data class ErrorResponse(val error: String, val message: String)
