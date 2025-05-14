@@ -11,6 +11,7 @@ import ProjectChat from "@/components/ProjectChat.vue";
 import UserSearch from "@/components/UserSearch.vue";
 import UserChat from "@/components/UserChat.vue";
 import ChatTest from "@/components/ChatTest.vue";
+import AccountDetails from './components/AccountDetails.vue';
 
 const routes = [
     {
@@ -78,7 +79,12 @@ const routes = [
         name: 'ChatTest',
         component: ChatTest,
         props: true
-    }
+    },
+    {
+        path: '/edit-account',
+        name: 'EditAccount',
+        component: AccountDetails
+    },
 ];
 
 const router = createRouter({
