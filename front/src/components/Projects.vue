@@ -1,6 +1,7 @@
 
 <template>
   <div class="projects">
+    <div class="links edit-account" @click="editAccount">Edytuj dane</div>
     <div class="links logout" @click="logOut">Wyloguj się</div>
 
     <div class="title">Lista projektów</div>
@@ -167,6 +168,10 @@ export default {
       //todo
     },
 
+    editAccount(){
+      this.$router.push('/edit-account')
+    },
+
     searchName() {
       if (this.searchedName.trim() === '') {
         // Resetujemy filteredProjects do wszystkich projektów
@@ -231,6 +236,11 @@ table tbody { height:530px; overflow-y:scroll; display:block; }
 table thead { display:block; }
 
 .links.logout{
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.links.edit-account{
   margin-left: 0;
   margin-right: auto;
 }
