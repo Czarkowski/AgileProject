@@ -60,7 +60,7 @@ export default {
         const configuration = new Configuration({ accessToken: localStorage.getItem("token")});
         const projectControllerApi = new ProjectControllerApi(configuration);
         projectControllerApi.addProject({ projectAddRequestBody: projectRequestBody})
-
+        
         if (this.projectName === '') {
           this.showError = true;
         } else {

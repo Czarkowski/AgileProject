@@ -56,6 +56,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { UserControllerApi, AuthControllerApi } from '@/api/apis';
+import { Configuration } from '@/api';
 
 export default defineComponent({
   name: 'AccountEdit',
@@ -87,13 +88,10 @@ export default defineComponent({
 
         if (!username) throw new Error("Nie udało się odczytać użytkownika z tokena.");
 
-        const userApi = new UserControllerApi();
-        const user = await userApi.getUserByUsername({ username }, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
+        
+        const configuration = new Configuration({ accessToken: localStorage.getItem("token")});
+        const userApi = new UserControllerApi(configuration);
+        const user = await userApi.getUserByUsername({ username });
 
         this.firstName = user.firstName || '';
         this.lastName = user.lastName || '';
@@ -113,7 +111,8 @@ export default defineComponent({
         return;
       }
 
-      const apiUser = new UserControllerApi();
+      const configuration = new Configuration({ accessToken: token});
+      const apiUser = new UserControllerApi(configuration);
 
       const updateData = {
         userUpdateRequestBody: {
@@ -123,12 +122,7 @@ export default defineComponent({
       };
 
       try {
-        await apiUser.updateUser(updateData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
+        await apiUser.updateUser(updateData);
 
         alert("Zaktualizowano dane użytkownika.");
         this.showError = false;
@@ -178,7 +172,8 @@ export default defineComponent({
         return;
       }
 
-      const authApi = new AuthControllerApi();
+      const configuration = new Configuration({ accessToken: token});
+      const authApi = new AuthControllerApi(configuration);
 
       try {
         const changePasswordRequestBody = {
@@ -188,13 +183,7 @@ export default defineComponent({
         };
 
         await authApi.changePassword(
-          { changePasswordRequestBody },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-          }
+          { changePasswordRequestBody }
         );
 
         alert("Hasło zostało zmienione.");
