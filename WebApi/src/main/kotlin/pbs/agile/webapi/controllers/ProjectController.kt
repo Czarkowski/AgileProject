@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import pbs.agile.webapi.dtos.ProjectDto
+import pbs.agile.webapi.dtos.ProjectFileDto
+import pbs.agile.webapi.mappers.toFileDto
 import pbs.agile.webapi.requests.UserAndProjectRequestBody
 import pbs.agile.webapi.requests.ProjectAddRequestBody
 import pbs.agile.webapi.requests.ProjectUpdateRequestBody
@@ -22,10 +24,10 @@ class ProjectController(@Autowired private val projectService: ProjectService) {
         @RequestParam(required = false) memberId: Long?,
     ): List<ProjectDto> = projectService.getAllProjects(ownerId, memberId)
 
-    @PostMapping
-    fun addProject(@RequestBody project: ProjectAddRequestBody): ProjectDto {
-
-        return projectService.addProject(project)
+    @PostMapping("/add")
+    fun addProject(@RequestBody request: ProjectAddRequestBody): ResponseEntity<ProjectFileDto> {
+        val projectFileDto = projectService.addProject(request)
+        return ResponseEntity.status(HttpStatus.CREATED).body(projectFileDto)
     }
 
     @PutMapping("/{projectId}")
