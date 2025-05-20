@@ -3,7 +3,7 @@ plugins {
     kotlin("plugin.spring") version "1.9.25"
     id("org.springframework.boot") version "3.4.3"
     id("io.spring.dependency-management") version "1.1.7"
-    kotlin("plugin.jpa") version "1.9.25" // Zaktualizowana wersja
+    kotlin("plugin.jpa") version "1.9.25"
     id("org.openapi.generator") version "7.2.0"
 }
 
@@ -39,7 +39,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("javax.xml.bind:jaxb-api:2.3.1")
+    implementation("jakarta.xml.bind:jakarta.xml.bind-api:3.0.0")
     implementation("io.jsonwebtoken:jjwt:0.2")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     compileOnly("org.projectlombok:lombok")
@@ -51,8 +51,7 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation(kotlin("stdlib"))
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
-//    implementation("org.springdoc:springdoc-openapi-ui:1.8.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 }
 
 kotlin {
@@ -70,16 +69,3 @@ allOpen {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
-
-//openApiGenerate {
-//    generatorName.set("typescript-fetch") // Możesz zmienić na np. "typescript-angular" lub "typescript-axios"
-//    inputSpec.set("$rootDir/src/main/resources/openapi.yaml") // Ścieżka do pliku OpenAPI
-//    outputDir.set("$buildDir/generated") // Katalog, gdzie wygenerowane będą pliki
-//    apiPackage.set("com.example.api") // Pakiet API (jeśli generujesz też klienta)
-//    modelPackage.set("com.example.model") // Pakiet modeli
-//    typeMappings.set(mapOf("LocalDateTime" to "string")) // Opcjonalne mapowania typów
-//}
-//
-//tasks.named("compileKotlin") {
-//    dependsOn("openApiGenerate")
-//}
