@@ -50,6 +50,7 @@
 </template>
 
 <script>
+import * as userUtils from "../user.js";
 export default {
   name: "Projects",
   data() {
@@ -164,20 +165,18 @@ export default {
   },
   methods: {
 
-    logOut(){
+    logOut() {
       //todo
     },
 
-    editAccount(){
+    editAccount() {
       this.$router.push('/edit-account')
     },
 
     searchName() {
       if (this.searchedName.trim() === '') {
-        // Resetujemy filteredProjects do wszystkich projektów
         this.filteredProjects = [...this.projects];
       } else {
-        // Filtrujemy projekty na podstawie nazwy
         this.filteredProjects = this.projects.filter((project) =>
             project.name.toLowerCase().includes(this.searchedName.toLowerCase())
         );
@@ -190,15 +189,22 @@ export default {
     },
 
 
-    goToAddProject(){
+    goToAddProject() {
       this.$router.push('/projects/add-project')
     },
 
     goToDetails(projectId) {
       this.$router.push(`/projects/${projectId}/details`);
+    },
+
+    init() {
+        console.error(userUtils.getLoggedUser());
     }
+
   },
+
   mounted() {
+    this.init();
     this.filteredProjects = this.projects; // Domyślnie pokazujemy wszystkie projekty
   },
 };
