@@ -49,13 +49,11 @@ export default {
         // const userApi = new UserControllerApi();
         // const userResponse = await userApi.getUserByUsername({ username: this.email });
 
-        if (response && response.token) {
-          localStorage.setItem('token', response.token);
-        }
 
         if (response) {
           console.log(response)
           // console.log('Zalogowano pomyślnie:', userResponse);
+          localStorage.setItem('loggedUser', JSON.stringify(response));
 
           this.$router.push('/projects');
         }
