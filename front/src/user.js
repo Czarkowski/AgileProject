@@ -53,4 +53,3 @@ export async function refreshTokenIfNeeded() {
 export function logout() {
     localStorage.removeItem('loggedUser');
 }
-

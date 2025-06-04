@@ -84,7 +84,7 @@ export default {
           console.error("Błąd podczas pobierania projektów:", error);
         }
     },
-
+    
     editAccount() {
       this.$router.push('/edit-account')
     },
