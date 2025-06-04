@@ -40,12 +40,17 @@ export async function refreshTokenIfNeeded() {
         localStorage.setItem('loggedUser', JSON.stringify({
             token: data.token,
             refreshToken: data.refreshToken,
-            ...data.loggedUser,
+            loggedUser: data.loggedUser,
         }));
 
     } catch {
         localStorage.removeItem('loggedUser');
+        console.error("refreshtoken error");
     }
 
+}
+
+export function logout() {
+    localStorage.removeItem('loggedUser');
 }
 

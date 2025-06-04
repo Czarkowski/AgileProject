@@ -32,11 +32,14 @@
 </template>
 
 <script lang="ts">
-import { ProjectAddRequestBody} from '@/api/models/ProjectAddRequestBody';
+import { ProjectAddRequestBody } from '@/api/models/ProjectAddRequestBody';
 import { ProjectControllerApi } from '@/api/apis/ProjectControllerApi';
 import { Configuration } from '@/api/runtime';
+import * as userUtils from "../user.js";
+
 export default {
-  NAME: "AddProject",
+  name: "AddProject",
+
   data() {
     return {
       projectName: '',
@@ -47,44 +50,64 @@ export default {
       showError: false,
       turnedIn: 0,
       turnedInDate: undefined,
-     }
+      user: undefined,
+    };
+  },
+
+  methods: {
+    addProject() {
+      if (this.projectName === '') {
+        this.showError = true;
+        return;
+      }
+
+      this.showError = false;
+
+      const projectRequestBody: ProjectAddRequestBody = {
+        description: this.projectDetails,
+        title: this.projectName,
+        ownerId: this.user.loggedUser.id,
+      };
+
+      const configuration = new Configuration({ accessToken: this.user.token });
+      const projectControllerApi = new ProjectControllerApi(configuration);
+
+      projectControllerApi.addProject({ projectAddRequestBody: projectRequestBody })
+          .then(() => {
+            this.projectAddDate = new Date();
+            alert("Utworzono projekt: " + this.projectName);
+            console.log(this.turnedIn, this.turnedInDate);
+
+            this.projectName = '';
+            this.projectDetails = '';
+            this.projectAddDate = undefined;
+          })
+          .catch((error) => {
+            console.error("Błąd podczas dodawania projektu:", error);
+          });
     },
 
-    methods: {
-      addProject() {
-        const projectRequestBody: ProjectAddRequestBody = {
-          description: this.projectDetails,
-          title: this.projectName,
-          ownerId: 2,
-        };
-        const configuration = new Configuration({ accessToken: localStorage.getItem("token")});
-        const projectControllerApi = new ProjectControllerApi(configuration);
-        projectControllerApi.addProject({ projectAddRequestBody: projectRequestBody})
-        
-        if (this.projectName === '') {
-          this.showError = true;
-        } else {
-          this.showError = false;
-          this.projectAddDate = new Date();
-          alert("Utworzono projekt: " + this.projectName);
-          console.error(this.turnedIn, this.turnedInDate)
-          this.projectName = '';
-          this.projectDetails = '';
-          this.projectAddDate = undefined;
-        }
-      },
+    goBack() {
+      this.$router.push('/projects/');
+    },
 
-      goBack() {
-        this.$router.push('/projects/');
-      },
-
-      handleTurnedInChange() {
-        if (this.turnedIn === 0) {
-          this.turnedInDate = undefined;
-        }
+    handleTurnedInChange() {
+      if (this.turnedIn === 0) {
+        this.turnedInDate = undefined;
       }
     },
-}
+
+    init() {
+      this.user = userUtils.getLoggedUser();
+      console.error("user utils", userUtils.getLoggedUser());
+      console.error("logged user:" ,this.user);
+    }
+  },
+
+  mounted() {
+    this.init();
+  }
+};
 </script>
 
 
