@@ -32,8 +32,15 @@ class ProjectServiceTest {
 
     @Test
     fun `should return all projects`() {
-        val project = Project(id = 1L, title = "Test Project", description = "Test Description", owner = null, users = mutableListOf())
-        `when`(projectRepository.findAll()).thenReturn(listOf(project))
+        val project = Project(
+            id = 1L,
+            title = "Test Project",
+            description = "Test Description",
+            owner = null,
+            users = mutableListOf()
+        )
+
+        `when`(projectRepository.findAllByUserAssociation(null, 1L)).thenReturn(listOf(project))
 
         val projects = projectService.getAllProjects(memberId = 1)
 
