@@ -22,12 +22,33 @@ class ProjectController(@Autowired private val projectService: ProjectService, p
     fun getAllProjects(
         @RequestParam(required = false) ownerId: Long?,
         @RequestParam(required = false) memberId: Long?,
+        @RequestParam(required = false) byMember: Boolean?,
         authentication: Authentication,
     ): List<ProjectDto> {
-//        val userDetails = userRepository.findByUsername(authentication.name)!!
-//        val finalOwnerId = ownerId ?: userDetails.id
-//        val finalMemberId = memberId ?: userDetails.id
-        return projectService.getAllProjects(ownerId, memberId)
+        val userDetails = userRepository.findByUsername(authentication.name)!!
+        val resolvedOwnerId: Long?
+        val resolvedMemberId: Long?
+
+        if (ownerId == null && memberId == null) {
+            when (byMember) {
+                true -> {
+                    resolvedOwnerId = null
+                    resolvedMemberId = userDetails.id
+                }
+                false -> {
+                    resolvedOwnerId = userDetails.id
+                    resolvedMemberId = null
+                }
+                null -> {
+                    resolvedOwnerId = userDetails.id
+                    resolvedMemberId = userDetails.id
+                }
+            }
+        } else {
+            resolvedOwnerId = ownerId
+            resolvedMemberId = memberId
+        }
+        return projectService.getAllProjects(resolvedOwnerId, resolvedMemberId)
     }
 
     @PostMapping
