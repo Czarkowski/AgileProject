@@ -30,7 +30,8 @@ fun Project.toDTO(): ProjectDto {
     return ProjectDto(
         id = this.id ?: 0L,
         title = this.title,
-        description = this.description
+        description = this.description,
+            ownerId =  this.owner!!.id!!
     )
 }
 

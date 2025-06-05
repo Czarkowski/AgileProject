@@ -4,8 +4,10 @@ import jakarta.persistence.EntityNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
 import pbs.agile.webapi.dtos.ProjectDto
+import pbs.agile.webapi.repositories.UserRepository
 import pbs.agile.webapi.requests.UserAndProjectRequestBody
 import pbs.agile.webapi.requests.ProjectAddRequestBody
 import pbs.agile.webapi.requests.ProjectUpdateRequestBody
@@ -14,13 +16,19 @@ import pbs.agile.webapi.services.ProjectService
 @RestController
 @RequestMapping("/api/projects")
 @CrossOrigin(origins = ["http://localhost:5173"])
-class ProjectController(@Autowired private val projectService: ProjectService) {
+class ProjectController(@Autowired private val projectService: ProjectService, private val userRepository: UserRepository) {
 
     @GetMapping
     fun getAllProjects(
         @RequestParam(required = false) ownerId: Long?,
         @RequestParam(required = false) memberId: Long?,
-    ): List<ProjectDto> = projectService.getAllProjects(ownerId, memberId)
+        authentication: Authentication,
+    ): List<ProjectDto> {
+//        val userDetails = userRepository.findByUsername(authentication.name)!!
+//        val finalOwnerId = ownerId ?: userDetails.id
+//        val finalMemberId = memberId ?: userDetails.id
+        return projectService.getAllProjects(ownerId, memberId)
+    }
 
     @PostMapping
     fun addProject(@RequestBody project: ProjectAddRequestBody): ProjectDto {
