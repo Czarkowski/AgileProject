@@ -133,9 +133,10 @@ class ChatMessageServiceTest {
             project = project
         )
 
-        `when`(chatMessageRepository.findByProject_Id(10)).thenReturn(listOf(message))
+        `when`(chatMessageRepository.findByProjectIdAndDateRange(1, LocalDateTime.MIN, LocalDateTime.MAX))
+            .thenReturn(listOf(message))
 
-        val result = chatMessageService.getMessagesForProject(10, LocalDateTime.MIN, LocalDateTime.MAX)
+        val result = chatMessageService.getMessagesForProject(1, LocalDateTime.MIN, LocalDateTime.MAX)
 
         assertEquals(1, result.size)
         assertEquals("Test message", result[0].content)
