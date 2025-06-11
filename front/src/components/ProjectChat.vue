@@ -5,6 +5,7 @@ import { connectToGroup, sendMessageToGroup } from '@/services/stomp-service'
 import { ChatMessageDto } from '@/api/models/ChatMessageDto'
 import { UserControllerApi} from '@/api/apis';
 import { Configuration } from '@/api';
+import { refreshTokenIfNeeded, getLoggedUser } from '@/user';
 
 const route = useRoute()
 const projectId = Number(route.params.projectId)
@@ -14,31 +15,48 @@ const input = ref('')
 const isOpen = ref(false)
 
 const senderId = ref<number | null>(null)
+const senderUsername = ref<string | null>(null)
 
-async function getUserIdFromToken(): Promise<number | null> {
-  const token = localStorage.getItem("token")
-  if (!token) return null
+const userMap = ref<Record<number, string>>({})
+
+async function loadUsername(userId: number) {
+  if (userMap.value[userId]) return
+
+  const loggedUser = getLoggedUser()
+  if (!loggedUser || !loggedUser.loggedUser?.token) return
 
   try {
-    const payload = JSON.parse(atob(token.split('.')[1]))
-    const configuration = new Configuration({ accessToken: token });
-    const userApi = new UserControllerApi(configuration);
-    const username = payload?.sub
-    const user = await userApi.getUserByUsername({ username });
-    return user.id || null
+    const userApi = new UserControllerApi(new Configuration({ accessToken: loggedUser.loggedUser.token }))
+    const user = await userApi.getUserByIdentifier({ identifier: String(userId) })
+    userMap.value[userId] = user.username || `Użytkownik ${userId}`
   } catch (e) {
-    console.error("Błąd dekodowania tokena:", e)
-    return null
+    console.error('Błąd podczas pobierania username:', e)
+    userMap.value[userId] = `Użytkownik ${userId}`
   }
 }
 
 onMounted(async () => {
-  senderId.value = await getUserIdFromToken()
-  console.log("Zalogowany użytkownik:", senderId.value)
+  await refreshTokenIfNeeded()
 
-  connectToGroup(projectId, (msg: ChatMessageDto) => {
+  const loggedUser = getLoggedUser()
+
+  if (!loggedUser || !loggedUser.loggedUser || !loggedUser.loggedUser.id || !loggedUser.loggedUser.username) {
+    console.error('Brak zalogowanego użytkownika')
+    return
+  }
+
+  senderId.value = loggedUser.loggedUser.id
+  senderUsername.value = loggedUser.loggedUser.username
+  userMap.value[senderId.value] = senderUsername.value
+
+  console.log('Zalogowany użytkownik:', senderId.value, senderUsername.value)
+
+  connectToGroup(projectId, async (msg: ChatMessageDto) => {
     console.log("Otrzymano wiadomość:", msg)
     messages.value.push(msg)
+    if (!userMap.value[msg.senderId]) {
+      await loadUsername(msg.senderId)
+    }
   })
 })
 
@@ -70,7 +88,7 @@ function send() {
           :key="m.timestamp"
           :class="['message-bubble', m.senderId === senderId ? 'mine' : 'theirs']"
         >
-          <div class="sender">Użytkownik {{ m.senderId }}</div>
+          <div class="sender">{{ userMap[m.senderId] || 'Użytkownik ' + m.senderId }}</div>
           <div class="content">{{ m.content }}</div>
         </div>
       </div>
