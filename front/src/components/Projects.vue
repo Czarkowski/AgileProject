@@ -123,7 +123,7 @@ export default {
 
   mounted() {
     this.init();
-    //this.filteredProjects = this.projects; // Domyślnie pokazujemy wszystkie projekty
+    //this.filteredProjects = this.projects;
   },
 };
 </script>
