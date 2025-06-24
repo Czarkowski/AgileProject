@@ -57,6 +57,12 @@ export interface ProjectDto {
      * @memberof ProjectDto
      */
     members: Array<UserDto>;
+    /**
+     * 
+     * @type {Date}
+     * @memberof ProjectDto
+     */
+    completionDate?: Date;
 }
 
 /**
@@ -86,6 +92,7 @@ export function ProjectDtoFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'description': json['description'],
         'ownerId': json['ownerId'],
         'members': ((json['members'] as Array<any>).map(UserDtoFromJSON)),
+        'completionDate': json['completionDate'] == null ? undefined : (new Date(json['completionDate'])),
     };
 }
 
@@ -105,6 +112,7 @@ export function ProjectDtoToJSONTyped(value?: ProjectDto | null, ignoreDiscrimin
         'description': value['description'],
         'ownerId': value['ownerId'],
         'members': ((value['members'] as Array<any>).map(UserDtoToJSON)),
+        'completionDate': value['completionDate'] == null ? undefined : ((value['completionDate']).toISOString()),
     };
 }
 

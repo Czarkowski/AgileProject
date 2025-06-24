@@ -32,7 +32,8 @@ fun Project.toDTO(): ProjectDto {
         title = this.title,
         description = this.description,
             ownerId =  this.owner!!.id!!,
-            members = this.users.map{ it.toDTO() }
+            members = this.users.map{ it.toDTO() },
+            completionDate = this.completionDate
     )
 }
 

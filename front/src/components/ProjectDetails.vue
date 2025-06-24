@@ -298,7 +298,7 @@ export default {
       </div>
       <div class="row">
         <div class="label">Właściciel</div>
-        <div class="value">{{ user.loggedUser.username }}</div>
+        <div class="value">{{ project.ownerId }}</div>
       </div>
       <div class="row">
         <div class="label">Członkowie</div>
