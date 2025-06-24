@@ -30,6 +30,7 @@ export default {
       this.user = userUtils.getLoggedUser();
       this.projectId = Number(this.$route.params.projectId);
       this.getAllProjects();
+      console.error(this.projects);
     },
 
     async getAllProjects() {
@@ -128,15 +129,16 @@ export default {
       <div class="row">
         <div class="label">Ukończony</div>
         <div class="value">
-          <input class="checkbox" type="checkbox" id="turnedIn" v-model="turnedIn" :true-value="1" :false-value="0" />
+          <input class="checkbox" type="checkbox" id="turnedIn" v-model="project.completionDate" :true-value="1" :false-value="0" />
         </div>
       </div>
       <div class="row">
         <div class="label">Właściciel</div>
-        <div class="value">{{ user.loggedUser.username }}</div>
+        <div class="value">{{ project.ownerId }}</div>
       </div>
       <div class="row">
         <div class="label">Członkowie</div>
+        <div class="value">{{ project.members }}</div>
       </div>
     </div>
 
