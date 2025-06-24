@@ -12,6 +12,9 @@ import UserSearch from "@/components/UserSearch.vue";
 import UserChat from "@/components/UserChat.vue";
 import ChatTest from "@/components/ChatTest.vue";
 import AccountDetails from './components/AccountDetails.vue';
+import { getLoggedUser } from './user.js';
+import { refreshTokenIfNeeded } from './user.js';
+
 
 const routes = [
     {
@@ -90,6 +93,26 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(),
     routes
+});
+
+router.beforeEach(async (to, from, next) => {
+   if(to.path === '/'){
+       return next();
+   }
+
+   try {
+    await refreshTokenIfNeeded();
+    const loggedUser = getLoggedUser();
+
+    if (!loggedUser) {
+        return next('/');
+    }
+    next();
+    } catch (error) {
+       console.error("access error", this.loggedUser);
+    next('/');
+}
+
 });
 
 export default router;

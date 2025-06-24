@@ -57,6 +57,7 @@
 import { defineComponent } from 'vue';
 import { UserControllerApi, AuthControllerApi } from '@/api/apis';
 import { Configuration } from '@/api';
+import { getLoggedUser, refreshTokenIfNeeded } from '@/user';
 
 export default defineComponent({
   name: 'AccountEdit',
@@ -80,18 +81,13 @@ export default defineComponent({
   methods: {
     async loadUserData() {
       try {
-        const token = localStorage.getItem("token");
-        if (!token) throw new Error("Brakuje tokena.");
+        await refreshTokenIfNeeded();
+        const loggedUser = getLoggedUser();
 
-        const payload = this.parseJwt(token);
-        const username = payload?.sub;
-
-        if (!username) throw new Error("Nie udało się odczytać użytkownika z tokena.");
-
-        
-        const configuration = new Configuration({ accessToken: localStorage.getItem("token")});
-        const userApi = new UserControllerApi(configuration);
-        const user = await userApi.getUserByUsername({ username });
+        if (!loggedUser || !loggedUser.loggedUser || !loggedUser.loggedUser.username || !loggedUser.token) {
+          throw new Error("Brak zalogowanego użytkownika lub tokena.");
+        }
+        const user = loggedUser.loggedUser;
 
         this.firstName = user.firstName || '';
         this.lastName = user.lastName || '';
@@ -103,7 +99,7 @@ export default defineComponent({
     },
 
     async updateAccount() {
-      const token = localStorage.getItem("token");
+      const token = getLoggedUser().token;
 
       if (!token) {
         this.errorMessage = "Brakuje tokena.";
