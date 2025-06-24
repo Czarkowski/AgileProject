@@ -10,14 +10,14 @@
     <label for="details">Opis</label>
     <textarea id="details" v-model="projectDetails" maxlength="1000"></textarea>
 
-    <div style="display: flex; flex-direction: row; gap: 2vmin;">
+    <!--<div style="display: flex; flex-direction: row; gap: 2vmin;">
     <label for="turnedIn">Oddany?</label>
     <input class="checkbox" type="checkbox" id="turnedIn" v-model="turnedIn" :true-value="1" :false-value="0" @change="handleTurnedInChange()" />
     </div>
 
     <div v-if="turnedIn">
       <input class="calendar" type="date" v-model="turnedInDate">
-    </div>
+    </div>-->
 
     <div v-if="this.showError" class="error">{{this.errorMessage}}</div>
 
