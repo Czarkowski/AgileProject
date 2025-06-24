@@ -12,6 +12,7 @@ import pbs.agile.webapi.requests.UserAndProjectRequestBody
 import pbs.agile.webapi.requests.ProjectAddRequestBody
 import pbs.agile.webapi.requests.ProjectUpdateRequestBody
 import pbs.agile.webapi.services.ProjectService
+import pbs.agile.webapi.repositories.UserRepository
 
 @RestController
 @RequestMapping("/api/projects")
