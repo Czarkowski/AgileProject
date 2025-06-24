@@ -6,9 +6,7 @@ import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import pbs.agile.webapi.dtos.ProjectDto
-import pbs.agile.webapi.dtos.ProjectFileDto
 import pbs.agile.webapi.mappers.toDTO
-import pbs.agile.webapi.mappers.toFileDto
 import pbs.agile.webapi.models.entities.Project
 import pbs.agile.webapi.repositories.ProjectRepository
 import pbs.agile.webapi.repositories.UserRepository
@@ -30,14 +28,14 @@ class ProjectService(@Autowired private val projectRepository: ProjectRepository
         return projects.map { it.toDTO() }
     }
 
-    fun addProject(projectRequest: ProjectAddRequestBody): ProjectFileDto {
+    fun addProject(projectRequest: ProjectAddRequestBody): ProjectDto{
         val owner = userRepository.findById(projectRequest.ownerId).orElseThrow()
         var project: Project = Project()
         project.description = projectRequest.description
         project.title = projectRequest.title
         project.owner = owner
         project = projectRepository.save(project)
-        return project.toFileDto()
+        return project.toDTO()
     }
 
     @Transactional
@@ -115,6 +113,3 @@ class ProjectService(@Autowired private val projectRepository: ProjectRepository
         return  project.getOrNull()!!.toDTO()
     }
 }
-
-
-
