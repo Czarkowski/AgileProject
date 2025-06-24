@@ -24,13 +24,20 @@ class SecurityConfig(
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         return http
-                .cors(Customizer.withDefaults())
+            .cors(Customizer.withDefaults())
             .csrf { it.disable() }
             .authorizeHttpRequests {
-                it.requestMatchers( "/auth/**", "/auth/login","/auth/register", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                it.anyRequest().authenticated()
+                it
+                    .requestMatchers(
+                        "/auth/**",
+                        "/auth/login",
+                        "/auth/register",
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**",
+                        "/ws-chat/**"
+                    ).permitAll()
+                    .anyRequest().authenticated()
             }
-//            .formLogin(Customizer.withDefaults())
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .httpBasic { }
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)
