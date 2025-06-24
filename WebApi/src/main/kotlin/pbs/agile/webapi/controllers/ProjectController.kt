@@ -51,6 +51,15 @@ class ProjectController(@Autowired private val projectService: ProjectService, p
         return projectService.getAllProjects(resolvedOwnerId, resolvedMemberId)
     }
 
+    @GetMapping("/{projectId}")
+    fun getAllProject(
+            @PathVariable projectId: Long,
+            authentication: Authentication,
+    ): ProjectDto {
+
+        return projectService.getProject(projectId);
+    }
+
     @PostMapping
     fun addProject(@RequestBody project: ProjectAddRequestBody): ProjectDto {
 

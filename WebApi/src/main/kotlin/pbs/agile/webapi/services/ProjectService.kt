@@ -13,6 +13,7 @@ import pbs.agile.webapi.repositories.UserRepository
 import pbs.agile.webapi.requests.ProjectAddRequestBody
 import pbs.agile.webapi.requests.ProjectUpdateRequestBody
 import java.time.LocalDateTime
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 class ProjectService(@Autowired private val projectRepository: ProjectRepository,
@@ -104,6 +105,12 @@ class ProjectService(@Autowired private val projectRepository: ProjectRepository
         project.completionDate = null
         val updatedProject = projectRepository.save(project)
         return updatedProject.toDTO()
+    }
+
+    @Transactional
+    fun getProject(projectId: Long): ProjectDto {
+        val project = projectRepository.findById(projectId)
+        return  project.getOrNull()!!.toDTO()
     }
 }
 

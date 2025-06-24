@@ -47,9 +47,14 @@ export interface DeleteUserFromProjectRequest {
     userAndProjectRequestBody: UserAndProjectRequestBody;
 }
 
+export interface GetAllProjectRequest {
+    projectId: number;
+}
+
 export interface GetAllProjectsRequest {
     ownerId?: number;
     memberId?: number;
+    byMember?: boolean;
 }
 
 export interface UncompleteProjectRequest {
@@ -245,6 +250,48 @@ export class ProjectControllerApi extends runtime.BaseAPI {
 
     /**
      */
+    async getAllProjectRaw(requestParameters: GetAllProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ProjectDto>> {
+        if (requestParameters['projectId'] == null) {
+            throw new runtime.RequiredError(
+                'projectId',
+                'Required parameter "projectId" was null or undefined when calling getAllProject().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
+            headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
+        }
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/projects/{projectId}`.replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters['projectId']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ProjectDtoFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async getAllProject(requestParameters: GetAllProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ProjectDto> {
+        const response = await this.getAllProjectRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
     async getAllProjectsRaw(requestParameters: GetAllProjectsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<ProjectDto>>> {
         const queryParameters: any = {};
 
@@ -254,6 +301,10 @@ export class ProjectControllerApi extends runtime.BaseAPI {
 
         if (requestParameters['memberId'] != null) {
             queryParameters['memberId'] = requestParameters['memberId'];
+        }
+
+        if (requestParameters['byMember'] != null) {
+            queryParameters['byMember'] = requestParameters['byMember'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

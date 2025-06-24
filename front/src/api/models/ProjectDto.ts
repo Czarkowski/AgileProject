@@ -13,6 +13,14 @@
  */
 
 import { mapValues } from '../runtime';
+import type { UserDto } from './UserDto';
+import {
+    UserDtoFromJSON,
+    UserDtoFromJSONTyped,
+    UserDtoToJSON,
+    UserDtoToJSONTyped,
+} from './UserDto';
+
 /**
  * 
  * @export
@@ -37,6 +45,18 @@ export interface ProjectDto {
      * @memberof ProjectDto
      */
     description: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProjectDto
+     */
+    ownerId: number;
+    /**
+     * 
+     * @type {Array<UserDto>}
+     * @memberof ProjectDto
+     */
+    members: Array<UserDto>;
 }
 
 /**
@@ -46,6 +66,8 @@ export function instanceOfProjectDto(value: object): value is ProjectDto {
     if (!('id' in value) || value['id'] === undefined) return false;
     if (!('title' in value) || value['title'] === undefined) return false;
     if (!('description' in value) || value['description'] === undefined) return false;
+    if (!('ownerId' in value) || value['ownerId'] === undefined) return false;
+    if (!('members' in value) || value['members'] === undefined) return false;
     return true;
 }
 
@@ -62,6 +84,8 @@ export function ProjectDtoFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'id': json['id'],
         'title': json['title'],
         'description': json['description'],
+        'ownerId': json['ownerId'],
+        'members': ((json['members'] as Array<any>).map(UserDtoFromJSON)),
     };
 }
 
@@ -79,6 +103,8 @@ export function ProjectDtoToJSONTyped(value?: ProjectDto | null, ignoreDiscrimin
         'id': value['id'],
         'title': value['title'],
         'description': value['description'],
+        'ownerId': value['ownerId'],
+        'members': ((value['members'] as Array<any>).map(UserDtoToJSON)),
     };
 }
 

@@ -4,6 +4,7 @@ data class ProjectDto (
     val id: Long,
     val title: String,
     val description: String,
-    val ownerId: Long
+    val ownerId: Long,
+        val members: List<UserDto>,
 )
 
