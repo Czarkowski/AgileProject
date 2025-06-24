@@ -7,8 +7,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
 import pbs.agile.webapi.dtos.ProjectDto
-import pbs.agile.webapi.dtos.ProjectFileDto
-import pbs.agile.webapi.mappers.toFileDto
 import pbs.agile.webapi.repositories.UserRepository
 import pbs.agile.webapi.requests.UserAndProjectRequestBody
 import pbs.agile.webapi.requests.ProjectAddRequestBody
@@ -18,10 +16,7 @@ import pbs.agile.webapi.services.ProjectService
 @RestController
 @RequestMapping("/api/projects")
 @CrossOrigin(origins = ["http://localhost:5173"])
-class ProjectController(
-    @Autowired private val projectService: ProjectService,
-    private val userRepository: UserRepository
-) {
+class ProjectController(@Autowired private val projectService: ProjectService, private val userRepository: UserRepository) {
 
     @GetMapping
     fun getAllProjects(
@@ -58,16 +53,17 @@ class ProjectController(
 
     @GetMapping("/{projectId}")
     fun getAllProject(
-        @PathVariable projectId: Long,
-        authentication: Authentication,
+            @PathVariable projectId: Long,
+            authentication: Authentication,
     ): ProjectDto {
-        return projectService.getProject(projectId)
+
+        return projectService.getProject(projectId);
     }
 
-    @PostMapping("/add")
-    fun addProject(@RequestBody request: ProjectAddRequestBody): ResponseEntity<ProjectFileDto> {
-        val projectFileDto = projectService.addProject(request)
-        return ResponseEntity.status(HttpStatus.CREATED).body(projectFileDto)
+    @PostMapping
+    fun addProject(@RequestBody project: ProjectAddRequestBody): ProjectDto {
+
+        return projectService.addProject(project)
     }
 
     @PutMapping("/{projectId}")
@@ -84,7 +80,8 @@ class ProjectController(
     }
 
     @PostMapping("/addUser")
-    fun addUserToProject(@RequestBody userAddRequest: UserAndProjectRequestBody): ResponseEntity<Any> {
+    fun addUserToProject(@RequestBody userAddRequest: UserAndProjectRequestBody
+        ): ResponseEntity<Any> {
         return try {
             val isOk = projectService.addUserToProject(userAddRequest.projectId, userAddRequest.userId)
             ResponseEntity.status(HttpStatus.NO_CONTENT).body(isOk)
@@ -94,7 +91,8 @@ class ProjectController(
     }
 
     @PostMapping("/removeUser")
-    fun deleteUserFromProject(@RequestBody userAddRequest: UserAndProjectRequestBody): ResponseEntity<Any> {
+    fun deleteUserFromProject(@RequestBody userAddRequest: UserAndProjectRequestBody
+        ): ResponseEntity<Any> {
         return try {
             val isOk = projectService.deleteUserFromProject(userAddRequest.projectId, userAddRequest.userId)
             ResponseEntity.status(HttpStatus.NO_CONTENT).body(isOk)
