@@ -12,6 +12,8 @@ export default {
 
   data() {
     return {
+      ownerName: undefined,
+      isOwner: undefined,
       hoveredMemberId: null,
       projectId: null,
       project: undefined,
@@ -31,11 +33,16 @@ export default {
   },
 
   methods: {
-    init() {
+    async init() {
       this.user = userUtils.getLoggedUser();
       this.projectId = Number(this.$route.params.projectId);
-      this.getAllProjects();
-      this.getAllUsers();
+
+      await this.getAllProjects();
+      await this.getAllUsers();
+    },
+
+    goBack(){
+        this.$router.push('/projects/');
     },
 
     removeMember(memberId) {
@@ -72,9 +79,26 @@ export default {
         const users = await userControllerApi.getAllUsers();
         this.users = users;
         console.error("Pobrani użytkownicy:", this.users);
+        this.getOwnerById(this.project.ownerId);
+
       } catch (error) {
         console.error("Błąd podczas pobierania użytkowników:", error);
         this.errorMessage = 'Nie udało się pobrać użytkowników.';
+      }
+    },
+
+    getOwnerById(userId) {
+      if (!this.users || this.users.length === 0) {
+        console.warn('Brak użytkowników do przeszukania');
+        return null;
+      }
+
+      const user = this.users.find(u => u.id === userId);
+      if (user) {
+        this.ownerName = user.username;
+      } else {
+        console.warn(`Nie znaleziono użytkownika o id ${userId}`);
+        this.ownerName = null;
       }
     },
 
@@ -138,7 +162,11 @@ export default {
       const projectControllerApi = new ProjectControllerApi(configuration);
 
       try {
-        const requestParams = { ownerId: this.user.loggedUser.id };
+        const requestParams = {
+          ownerId: this.user.loggedUser.id,
+          memberId: this.user.loggedUser.id,
+          byMember: null,
+        };
         const response = await projectControllerApi.getAllProjects(requestParams);
         this.projects = response;
         const found = this.projects.find(p => p.id === Number(this.projectId));
@@ -147,6 +175,11 @@ export default {
           this.editedTitle = found.title;
           this.editedDescription = found.description;
           this.members = found.members;
+          if (this.project.ownerId === this.user.loggedUser.id) {
+            this.isOwner = true;
+            console.error("jest ownerem");
+          }
+          else this.isOwner = false;
 
         }
         console.error(this.project);
@@ -298,7 +331,7 @@ export default {
       </div>
       <div class="row">
         <div class="label">Właściciel</div>
-        <div class="value">{{ project.ownerId }}</div>
+        <div class="value">{{ this.ownerName }}</div>
       </div>
       <div class="row">
         <div class="label">Członkowie</div>
@@ -314,7 +347,7 @@ export default {
               {{ member.username }}
               <span
                   class="remove-icon"
-                  v-if="hoveredMemberId === member.id"
+                  v-if="hoveredMemberId === member.id && isOwner"
                   @click="removeMember(member.id)"
               >
     ×
@@ -322,7 +355,7 @@ export default {
             </li>
           </ul>
         </div>
-        <div v-if="!toggleUserList" class="add-button" @click="showUserList()">+</div>
+        <div v-if="!toggleUserList && isOwner" class="add-button" @click="showUserList()">+</div>
 
         <select style="height: fit-content" v-if="toggleUserList" v-model="selectedUserId" @change="handleSelectChange"   ref="userSelect">
           <option v-for="user in userList" :key="user.id" :value="user.id">
@@ -334,12 +367,17 @@ export default {
       </div>
     </div>
 
-    <button
+    <div class="bottom-panel">
+    <div class="links back" @click="goBack">Powrót</div>
+
+    <button style="margin-left: auto"
         @click="updateProject"
         :disabled="!titleChanged && !descriptionChanged"
     >
       Zapisz
     </button>
+    </div>
+
 
     <chat />
   </div>
@@ -387,7 +425,6 @@ ul, ol{
 .member-item {
   display: flex;
   align-items: center;
-  padding: 0.3rem 0.5rem;
   border-radius: 4px;
 }
 
@@ -408,6 +445,10 @@ ul, ol{
 
 .project-details {
   padding: 2rem;
+}
+
+.bottom-panel{
+  display: flex;
 }
 
 .title {

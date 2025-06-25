@@ -74,6 +74,8 @@ export default {
         try {
           const requestParams = {
             ownerId: this.user.loggedUser.id,
+            memberId: this.user.loggedUser.id,
+            byMember: null
           };
 
           const response = await projectControllerApi.getAllProjects(requestParams);
