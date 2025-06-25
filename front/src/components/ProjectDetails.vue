@@ -379,7 +379,8 @@ export default {
     </div>
 
 
-    <chat />
+    <chat :user-list="users"></chat> 
+/>
   </div>
 </template>
 
