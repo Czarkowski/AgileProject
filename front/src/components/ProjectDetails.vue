@@ -300,8 +300,9 @@ export default {
 
 
 <template>
+  <div class="details-main">
+  <h2 class="title">Szczegóły projektu</h2>
   <div class="project-details" v-if="project">
-    <h2 class="title">Szczegóły projektu</h2>
     <div class="project-info">
       <div class="row">
         <div class="label">Tytuł</div>
@@ -327,7 +328,16 @@ export default {
       </div>
       <div v-if="this.turnedIn === 1" class="row">
         <div class="label">Data ukończenia</div>
-        <div class="value">{{this.project.completionDate}}</div>
+        <div class="value">{{
+            new Date(this.project.completionDate).toLocaleString('pl-PL', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            })
+          }}</div>
       </div>
       <div class="row">
         <div class="label">Właściciel</div>
@@ -379,8 +389,8 @@ export default {
     </div>
 
 
-    <chat :user-list="users"></chat> 
-/>
+    <chat :user-list="users"></chat>
+  </div>
   </div>
 </template>
 
@@ -404,6 +414,11 @@ export default {
 
 }
 
+.details-main{
+  display: flex;
+  flex-direction: column;
+}
+
 .add-button{
   background-color: #0d6efd;
   width:3vmin;
@@ -421,6 +436,11 @@ export default {
 
 ul, ol{
   background-color: unset;
+  display: flex;
+}
+
+li{
+  margin: 0 1vmin 1vmin 0;
 }
 
 .member-item {
@@ -445,7 +465,9 @@ ul, ol{
 }
 
 .project-details {
-  padding: 2rem;
+  background-color: #2c3e50;
+  padding: 2vmin;
+  border-radius: 1vmin;
 }
 
 .bottom-panel{
@@ -455,5 +477,6 @@ ul, ol{
 .title {
   font-size: 1.5rem;
   margin-bottom: 1rem;
+  text-align: center;
 }
 </style>
