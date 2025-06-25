@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { defineProps } from 'vue'
 import { useRoute } from 'vue-router'
 import { connectToGroup, sendMessageToGroup } from '@/services/stomp-service'
 import { ChatMessageDto } from '@/api/models/ChatMessageDto'
-import { UserControllerApi} from '@/api/apis';
-import { Configuration } from '@/api';
-import { refreshTokenIfNeeded, getLoggedUser } from '@/user';
+import { refreshTokenIfNeeded, getLoggedUser } from '@/user'
 
 const route = useRoute()
 const projectId = Number(route.params.projectId)
@@ -17,28 +16,16 @@ const isOpen = ref(false)
 const senderId = ref<number | null>(null)
 const senderUsername = ref<string | null>(null)
 
-const userMap = ref<Record<number, string>>({})
-
-async function loadUsername(userId: number) {
-  if (userMap.value[userId]) return
-
-  const loggedUser = getLoggedUser()
-  if (!loggedUser || !loggedUser.loggedUser?.token) return
-
-  try {
-    const userApi = new UserControllerApi(new Configuration({ accessToken: loggedUser.loggedUser.token }))
-    const user = await userApi.getUserByIdentifier({ identifier: String(userId) })
-    userMap.value[userId] = user.username || `Użytkownik ${userId}`
-  } catch (e) {
-    console.error('Błąd podczas pobierania username:', e)
-    userMap.value[userId] = `Użytkownik ${userId}`
-  }
-}
+const props = defineProps<{
+  userList: Array<{ id: number; username: string }>
+}>()
 
 onMounted(async () => {
   await refreshTokenIfNeeded()
 
   const loggedUser = getLoggedUser()
+  console.log('userList:', props.userList)
+
 
   if (!loggedUser || !loggedUser.loggedUser || !loggedUser.loggedUser.id || !loggedUser.loggedUser.username) {
     console.error('Brak zalogowanego użytkownika')
@@ -47,16 +34,15 @@ onMounted(async () => {
 
   senderId.value = loggedUser.loggedUser.id
   senderUsername.value = loggedUser.loggedUser.username
-  userMap.value[senderId.value] = senderUsername.value
 
   console.log('Zalogowany użytkownik:', senderId.value, senderUsername.value)
 
   connectToGroup(projectId, async (msg: ChatMessageDto) => {
     console.log("Otrzymano wiadomość:", msg)
+
+    // if (!userMap.value[msg.senderId]) await loadUsername(msg.senderId)
+
     messages.value.push(msg)
-    if (!userMap.value[msg.senderId]) {
-      await loadUsername(msg.senderId)
-    }
   })
 })
 
@@ -88,7 +74,11 @@ function send() {
           :key="m.timestamp"
           :class="['message-bubble', m.senderId === senderId ? 'mine' : 'theirs']"
         >
-          <div class="sender">{{ userMap[m.senderId] || 'Użytkownik ' + m.senderId }}</div>
+          <div class="sender">
+            {{
+              props.userList.find(user => user.id === m.senderId)?.username || `Użytkownik ${m.senderId}`
+            }}
+          </div>
           <div class="content">{{ m.content }}</div>
         </div>
       </div>
