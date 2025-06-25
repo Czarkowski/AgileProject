@@ -106,6 +106,8 @@ function send() {
 .chat-toggle {
   background-color: #0d6efd;
   color: white;
+  display: flex;
+  justify-content: center;
   border: none;
   border-radius: 50%;
   width: 56px;
