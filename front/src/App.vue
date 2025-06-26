@@ -12,11 +12,6 @@ export default {
 
 <style>
 
-{
-  margin: 0;
-  padding: 0;
-}
-
 html, body {
   height: 100%;
   background-color: #1B2A41;

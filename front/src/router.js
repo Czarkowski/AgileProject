@@ -96,7 +96,7 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-   if(to.path === '/'){
+   if(to.path === '/' || to.path === '/register'){
        return next();
    }
 
