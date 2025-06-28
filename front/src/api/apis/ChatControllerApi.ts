@@ -60,11 +60,11 @@ export class ChatControllerApi extends runtime.BaseAPI {
         const queryParameters: any = {};
 
         if (requestParameters['dateFrom'] != null) {
-            queryParameters['dateFrom'] = (requestParameters['dateFrom'] as any).toISOString();
+            queryParameters['dateFrom'] = requestParameters['dateFrom'];
         }
 
         if (requestParameters['dateTo'] != null) {
-            queryParameters['dateTo'] = (requestParameters['dateTo'] as any).toISOString();
+            queryParameters['dateTo'] = requestParameters['dateTo'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
