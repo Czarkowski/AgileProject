@@ -51,19 +51,10 @@ onMounted(async () => {
   senderId.value = loggedUser.loggedUser.id
   senderUsername.value = loggedUser.loggedUser.username
 
-  const now = new Date()
-  const weekAgo = new Date()
-  weekAgo.setDate(now.getDate() - 7)
-
-  function formatAsLocalDateTime(date: Date): string {
-    const pad = (n: number) => n.toString().padStart(2, '0');
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}` +
-          `T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
-  }
-
   try {
-    const dateFrom = formatAsLocalDateTime(weekAgo) as unknown as Date
-    const dateTo = formatAsLocalDateTime(now) as unknown as Date
+    const MS_PER_DAY = 86_400_000; // 24 * 60 * 60 * 1000
+    const dateTo = new Date();
+    const dateFrom = new Date(Date.now() - 7 * MS_PER_DAY);
 
     console.log('Pobieram historię:', { projectId, dateFrom, dateTo })
 
@@ -100,7 +91,7 @@ function send() {
   const msg: ChatMessageDto = {
     senderId: senderId.value,
     content: input.value,
-    timestamp: new Date().toISOString(),
+    timestamp: new Date(),
   }
 
   sendMessageToGroup(projectId, msg)

@@ -1,5 +1,6 @@
 apis/AuthControllerApi.ts
 apis/ChatControllerApi.ts
+apis/FilesControllerApi.ts
 apis/ProjectControllerApi.ts
 apis/UserControllerApi.ts
 apis/index.ts
@@ -7,6 +8,7 @@ index.ts
 models/AuthTokensResponseBody.ts
 models/ChangePasswordRequestBody.ts
 models/ChatMessageDto.ts
+models/FileDto.ts
 models/LoggedUserDto.ts
 models/LoginRequestBody.ts
 models/ProjectAddRequestBody.ts
@@ -14,8 +16,10 @@ models/ProjectDto.ts
 models/ProjectUpdateRequestBody.ts
 models/RefreshTokenRequestBody.ts
 models/RegisterRequestBody.ts
+models/UploadFileRequest.ts
 models/UserAndProjectRequestBody.ts
 models/UserDto.ts
+models/UserSimpleDto.ts
 models/UserUpdateRequestBody.ts
 models/index.ts
 runtime.ts

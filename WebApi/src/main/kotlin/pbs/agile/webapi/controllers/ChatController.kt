@@ -10,6 +10,7 @@ import pbs.agile.webapi.repositories.ChatMessageRepository
 import pbs.agile.webapi.services.ChatMessageService
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
 @RestController
 @RequestMapping("/api/chats")
@@ -18,11 +19,11 @@ class ChatController(
 ) {
 
     @GetMapping("/project-messages/{projectId}")
-    fun sendToGroup(
+    fun getHistory(
         @PathVariable projectId: Long,
-        @RequestParam dateFrom: LocalDateTime,
-        @RequestParam dateTo: LocalDateTime,
+        @RequestParam dateFrom: OffsetDateTime,
+        @RequestParam dateTo: OffsetDateTime,
     ): List<ChatMessageDto> {
-        return chatMessageService.getMessagesForProject(projectId, dateFrom, dateTo)
+        return chatMessageService.getMessagesForProject(projectId, dateFrom.toLocalDateTime(), dateTo.toLocalDateTime())
     }
 }

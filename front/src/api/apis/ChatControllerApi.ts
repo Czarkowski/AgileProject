@@ -60,11 +60,11 @@ export class ChatControllerApi extends runtime.BaseAPI {
         const queryParameters: any = {};
 
         if (requestParameters['dateFrom'] != null) {
-            queryParameters['dateFrom'] = requestParameters['dateFrom'];
+            queryParameters['dateFrom'] = (requestParameters['dateFrom'] as any).toISOString();
         }
 
         if (requestParameters['dateTo'] != null) {
-            queryParameters['dateTo'] = requestParameters['dateTo'];
+            queryParameters['dateTo'] = (requestParameters['dateTo'] as any).toISOString();
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -80,6 +80,7 @@ export class ChatControllerApi extends runtime.BaseAPI {
                 headerParameters["Authorization"] = `Bearer ${tokenString}`;
             }
         }
+        console.log(`queryParametersL ${JSON.stringify(queryParameters, null, 2)}`)
         const response = await this.request({
             path: `/api/chats/project-messages/{projectId}`.replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters['projectId']))),
             method: 'GET',
