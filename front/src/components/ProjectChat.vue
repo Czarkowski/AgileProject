@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick, watchEffect } from 'vue'
 import { defineProps } from 'vue'
 import { useRoute } from 'vue-router'
 import { connectToGroup, sendMessageToGroup } from '@/services/stomp-service'
 import { ChatMessageDto } from '@/api/models/ChatMessageDto'
 import { refreshTokenIfNeeded, getLoggedUser } from '@/user'
+import { ChatControllerApi } from '@/api/apis/ChatControllerApi'
+import { Configuration } from '@/api/runtime'
 
 const route = useRoute()
 const projectId = Number(route.params.projectId)
@@ -20,14 +22,28 @@ const props = defineProps<{
   userList: Array<{ id: number; username: string }>
 }>()
 
+const messagesContainer = ref<HTMLElement | null>(null)
+
+const loggedUser = getLoggedUser()
+const configuration = new Configuration({ accessToken: loggedUser.token });
+
+const chatControllerApi = new ChatControllerApi(configuration);
+
+
+function scrollToBottom() {
+  nextTick(() => {
+    if (messagesContainer.value) {
+      messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
+    }
+  })
+}
+
 onMounted(async () => {
   await refreshTokenIfNeeded()
 
   const loggedUser = getLoggedUser()
-  console.log('userList:', props.userList)
 
-
-  if (!loggedUser || !loggedUser.loggedUser || !loggedUser.loggedUser.id || !loggedUser.loggedUser.username) {
+  if (!loggedUser || !loggedUser.loggedUser?.id || !loggedUser.loggedUser?.username) {
     console.error('Brak zalogowanego użytkownika')
     return
   }
@@ -35,15 +51,47 @@ onMounted(async () => {
   senderId.value = loggedUser.loggedUser.id
   senderUsername.value = loggedUser.loggedUser.username
 
-  console.log('Zalogowany użytkownik:', senderId.value, senderUsername.value)
+  const now = new Date()
+  const weekAgo = new Date()
+  weekAgo.setDate(now.getDate() - 7)
+
+  function formatAsLocalDateTime(date: Date): string {
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}` +
+          `T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+  }
+
+  try {
+    const dateFrom = formatAsLocalDateTime(weekAgo) as unknown as Date
+    const dateTo = formatAsLocalDateTime(now) as unknown as Date
+
+    console.log('Pobieram historię:', { projectId, dateFrom, dateTo })
+
+    const history = await chatControllerApi.sendToGroup({
+      projectId: projectId,
+      dateFrom: dateFrom,
+      dateTo: dateTo
+    })
+    messages.value = history
+    console.log('historia: ', history)
+  } catch (error) {
+    console.error('Błąd przy pobieraniu historii:', error)
+  }
 
   connectToGroup(projectId, async (msg: ChatMessageDto) => {
-    console.log("Otrzymano wiadomość:", msg)
-
-    // if (!userMap.value[msg.senderId]) await loadUsername(msg.senderId)
-
     messages.value.push(msg)
   })
+})
+
+watchEffect(() => {
+  messages.value.length
+  scrollToBottom()
+})
+
+watchEffect(() => {
+  if (isOpen.value) {
+    scrollToBottom()
+  }
 })
 
 function send() {
@@ -55,7 +103,6 @@ function send() {
     timestamp: new Date().toISOString(),
   }
 
-  console.log("Wysyłam wiadomość:", msg)
   sendMessageToGroup(projectId, msg)
   input.value = ''
 }
@@ -68,16 +115,14 @@ function send() {
     </button>
 
     <div v-if="isOpen" class="chat-box">
-      <div class="messages">
+      <div class="messages" ref="messagesContainer">
         <div
           v-for="m in messages"
           :key="m.timestamp"
           :class="['message-bubble', m.senderId === senderId ? 'mine' : 'theirs']"
         >
           <div class="sender">
-            {{
-              props.userList.find(user => user.id === m.senderId)?.username || `Użytkownik ${m.senderId}`
-            }}
+            {{ props.userList.find(user => user.id === m.senderId)?.username || `Użytkownik ${m.senderId}` }}
           </div>
           <div class="content">{{ m.content }}</div>
         </div>
@@ -136,6 +181,7 @@ function send() {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  scroll-behavior: smooth;
 }
 
 .message-bubble {
