@@ -22,7 +22,7 @@ import {
     ChatMessageDtoToJSON,
 } from '../models/index';
 
-export interface SendToGroupRequest {
+export interface GetHistoryRequest {
     projectId: number;
     dateFrom: Date;
     dateTo: Date;
@@ -35,25 +35,25 @@ export class ChatControllerApi extends runtime.BaseAPI {
 
     /**
      */
-    async sendToGroupRaw(requestParameters: SendToGroupRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<ChatMessageDto>>> {
+    async getHistoryRaw(requestParameters: GetHistoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<ChatMessageDto>>> {
         if (requestParameters['projectId'] == null) {
             throw new runtime.RequiredError(
                 'projectId',
-                'Required parameter "projectId" was null or undefined when calling sendToGroup().'
+                'Required parameter "projectId" was null or undefined when calling getHistory().'
             );
         }
 
         if (requestParameters['dateFrom'] == null) {
             throw new runtime.RequiredError(
                 'dateFrom',
-                'Required parameter "dateFrom" was null or undefined when calling sendToGroup().'
+                'Required parameter "dateFrom" was null or undefined when calling getHistory().'
             );
         }
 
         if (requestParameters['dateTo'] == null) {
             throw new runtime.RequiredError(
                 'dateTo',
-                'Required parameter "dateTo" was null or undefined when calling sendToGroup().'
+                'Required parameter "dateTo" was null or undefined when calling getHistory().'
             );
         }
 
@@ -80,7 +80,6 @@ export class ChatControllerApi extends runtime.BaseAPI {
                 headerParameters["Authorization"] = `Bearer ${tokenString}`;
             }
         }
-        console.log(`queryParametersL ${JSON.stringify(queryParameters, null, 2)}`)
         const response = await this.request({
             path: `/api/chats/project-messages/{projectId}`.replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters['projectId']))),
             method: 'GET',
@@ -93,8 +92,8 @@ export class ChatControllerApi extends runtime.BaseAPI {
 
     /**
      */
-    async sendToGroup(requestParameters: SendToGroupRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<ChatMessageDto>> {
-        const response = await this.sendToGroupRaw(requestParameters, initOverrides);
+    async getHistory(requestParameters: GetHistoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<ChatMessageDto>> {
+        const response = await this.getHistoryRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

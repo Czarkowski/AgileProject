@@ -58,7 +58,7 @@ onMounted(async () => {
 
     console.log('Pobieram historię:', { projectId, dateFrom, dateTo })
 
-    const history = await chatControllerApi.sendToGroup({
+    const history = await chatControllerApi.getHistory({
       projectId: projectId,
       dateFrom: dateFrom,
       dateTo: dateTo
