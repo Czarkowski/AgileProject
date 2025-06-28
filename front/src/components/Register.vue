@@ -31,7 +31,7 @@
       </form>
       <p>
         Masz już konto? 
-        <router-link to="/login" class="links">Zaloguj się</router-link>
+        <router-link to="/" class="links">Zaloguj się</router-link>
       </p>
     </div>
   </div>
