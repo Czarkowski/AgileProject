@@ -3,6 +3,7 @@ import Chat from '@/components/ProjectChat.vue'
 import { ProjectControllerApi } from '@/api/apis/ProjectControllerApi';
 import { Configuration } from '@/api/runtime';
 import { UserControllerApi } from '@/api/apis/UserControllerApi'
+import { FilesControllerApi} from '@/api/apis/FilesControllerApi.js'
 import * as userUtils from "../user.js";
 import { FilesControllerApi, UploadFileRequest } from '@/api/index.js';
 
@@ -30,7 +31,8 @@ export default {
       users: [],
       userList: [],
       toggleUserList: false,
-      selectedFile: null as File | null,
+      file: undefined,
+      files: [],
     };
   },
 
@@ -48,9 +50,21 @@ export default {
     },
 
     removeMember(memberId) {
-      this.removeUser(Number(this.projectId), Number(memberId));
       this.members = this.members.filter(member => member.id !== memberId);
       this.updateSelectableUsers();
+    },
+
+    openChooseFile(){
+      this.$refs.fileInput.click();
+      },
+
+    handleFileAdd(event) {
+      const selectedFile = event.target.files[0];
+      if (!selectedFile) return;
+
+      this.file = selectedFile;
+
+      this.uploadFile();
     },
 
     updateSelectableUsers() {
@@ -412,6 +426,12 @@ export default {
         </select>
 
 
+      </div>
+      <div class="row">
+        <div class="label">Pliki</div>
+        <div class="value"></div>
+        <div class="add-button"  @click="openChooseFile">+</div>
+        <input type="file" ref="fileInput" @change="handleFileAdd" style="display: none"/>
       </div>
     </div>
 
