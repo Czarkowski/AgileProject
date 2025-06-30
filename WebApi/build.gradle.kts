@@ -44,7 +44,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-    runtimeOnly("org.postgresql:postgresql")
+    runtimeOnly("org.postgresql:postgresql:42.7.1")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")

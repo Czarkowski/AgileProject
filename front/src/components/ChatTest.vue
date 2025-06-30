@@ -20,7 +20,7 @@ function send() {
   const msg: ChatMessageDto = {
     senderId: 2, // lub dynamicznie z auth
     content: input.value,
-    timestamp: new Date().toISOString(),
+    timestamp: new Date(),
   }
   sendMessageToGroup(projectId, msg)
   input.value = ''
@@ -29,7 +29,7 @@ function send() {
 
 <template>
   <div>
-    <div v-for="m in messages" :key="m.timestamp">
+    <div v-for="m in messages" :key="m.timestamp.toString()">
       {{ m.senderId }}: {{ m.content }}
     </div>
     <input v-model="input" @keyup.enter="send" placeholder="Wpisz wiadomość..." />

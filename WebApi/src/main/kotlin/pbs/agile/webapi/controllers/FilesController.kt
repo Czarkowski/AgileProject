@@ -4,6 +4,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.Authentication
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
@@ -30,11 +31,11 @@ class FilesController(
     fun uploadFile(
         @PathVariable projectId: Long,
         @RequestParam("file") file: MultipartFile,
-        @AuthenticationPrincipal principal: org.springframework.security.core.userdetails.User
+        authentication: Authentication,
     ): ResponseEntity<FileDto> {
         val project: Project = projectRepository.findById(projectId)
             .orElseThrow { NoSuchElementException("Projekt nie istnieje") }
-        val uploader: User = userRepository.findByUsername(principal.username)
+        val uploader: User = userRepository.findByUsername(authentication.name)
             ?: throw NoSuchElementException("Użytkownik nie istnieje")
         val savedFile = filesService.saveFile(file, project, uploader)
         return ResponseEntity.status(HttpStatus.CREATED).body(savedFile.toDto())

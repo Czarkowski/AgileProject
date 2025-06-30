@@ -1,9 +1,10 @@
-<script>
+<script lang="ts">
 import Chat from '@/components/ProjectChat.vue'
 import { ProjectControllerApi } from '@/api/apis/ProjectControllerApi';
 import { Configuration } from '@/api/runtime';
 import { UserControllerApi } from '@/api/apis/UserControllerApi'
 import * as userUtils from "../user.js";
+import { FilesControllerApi, UploadFileRequest } from '@/api/index.js';
 
 export default {
   components: {
@@ -29,6 +30,7 @@ export default {
       users: [],
       userList: [],
       toggleUserList: false,
+      selectedFile: null as File | null,
     };
   },
 
@@ -275,7 +277,36 @@ export default {
       }
     },
 
+    uploadFile() {
+      if (!this.selectedFile)
+        return;
+      const formData = new FormData();
+      formData.append("file", this.selectedFile);
 
+      fetch(`http://localhost:8080/api/projects/${this.projectId}/files`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${this.user.token}`,
+        },
+        body: formData,
+      });
+
+      // const uploadFileRequest: UploadFileRequest = {
+      //   file: formData,
+      // };
+      // const configuration = new Configuration({ accessToken: this.user.token });
+      // const apiController = new FilesControllerApi(configuration)
+
+      // apiController.uploadFile({projectId: this.projectId, uploadFileRequest: uploadFileRequest})
+      // this.selectedFile = null
+    },
+
+    onFileChange(event: Event) {
+      const input = event.target as HTMLInputElement;
+      if (input.files?.length) {
+        this.selectedFile = input.files[0];
+      }
+    },
 
     startEditing(field) {
       this.editingField = field;
@@ -301,6 +332,13 @@ export default {
 
 <template>
   <div class="details-main">
+  <button @click="uploadFile">Dodaj plik</button>
+  <input
+    type="file"
+    ref="fileInput"
+    @change="onFileChange"
+  />
+
   <h2 class="title">Szczegóły projektu</h2>
   <div class="project-details" v-if="project">
     <div class="project-info">
