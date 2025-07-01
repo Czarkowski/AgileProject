@@ -3,8 +3,9 @@ import Chat from '@/components/ProjectChat.vue'
 import { ProjectControllerApi } from '@/api/apis/ProjectControllerApi';
 import { Configuration } from '@/api/runtime';
 import { UserControllerApi } from '@/api/apis/UserControllerApi'
+import { FilesControllerApi } from '@/api/apis/FilesControllerApi';
 import * as userUtils from "../user.js";
-import { FilesControllerApi, UploadFileRequest } from '@/api/index.js';
+//import { FilesControllerApi, UploadFileRequest } from '@/api/index.js';
 
 export default {
   components: {
@@ -31,6 +32,9 @@ export default {
       userList: [],
       toggleUserList: false,
       selectedFile: null as File | null,
+      files: [],
+      hoveredFileId: [],
+      selectedUserId: undefined,
     };
   },
 
@@ -41,6 +45,72 @@ export default {
 
       await this.getAllProjects();
       await this.getAllUsers();
+      await this.getProjectFiles();
+    },
+
+    async downloadFile(file) {
+
+      try {
+        const response = await fetch(`http://localhost:8080/api/projects/${this.projectId}/files/${file.id}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${this.user.token}`,
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error("error HTTP: " + response.status);
+        }
+
+        const blob = await response.blob();
+
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = file.filename || 'plik';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+
+      } catch (error) {
+        console.error("Błąd podczas pobierania pliku:", error);
+        alert("Nie udało się pobrać pliku.");
+      }
+    },
+
+
+
+    async removeFile(file){
+      const confirmed = confirm("Czy na pewno chcesz usunąć plik "+ file.filename + "?");
+      if (!confirmed) {
+        return;
+      }
+      const configuration = new Configuration({ accessToken: this.user.token });
+      const filesControllerApi = new FilesControllerApi(configuration);
+
+      try {
+        const requestParams = {
+          projectId: Number(this.projectId),
+          fileId: Number(file.id)
+        };
+
+      await filesControllerApi.deleteFile(requestParams);
+
+        alert("Plik usunięty");
+        await this.getProjectFiles();
+      } catch (error) {
+        console.error("Błąd podczas usuwania pliku:", error);
+      }
+
+
+    },
+
+    truncateFilename(filename) {
+      if (filename.length <= 60) {
+        return filename;
+      }
+      return filename.slice(0, 60) + '...';
     },
 
     goBack(){
@@ -48,9 +118,22 @@ export default {
     },
 
     removeMember(memberId) {
-      this.removeUser(Number(this.projectId), Number(memberId));
+      this.removeUser(Number(memberId));
       this.members = this.members.filter(member => member.id !== memberId);
       this.updateSelectableUsers();
+    },
+
+    openChooseFile(){
+      this.$refs.fileInput.click();
+      },
+
+    handleFileAdd(event) {
+      const selectedFile = event.target.files[0];
+      if (!selectedFile) return;
+
+      this.file = selectedFile;
+
+      this.uploadFile();
     },
 
     updateSelectableUsers() {
@@ -159,6 +242,25 @@ export default {
       else this.turnedIn = 1;
     },
 
+    async getProjectFiles() {
+      const configuration = new Configuration({ accessToken: this.user.token });
+      const filesControllerApi = new FilesControllerApi(configuration);
+
+      try {
+        const requestParams = {
+          projectId: Number(this.projectId)
+        };
+
+        const response = await filesControllerApi.listFiles(requestParams);
+        this.files = response;
+
+        console.log("Pobrane pliki:", this.files);
+      } catch (error) {
+        console.error("Błąd podczas pobierania plików:", error);
+      }
+    },
+
+
     async getAllProjects() {
       const configuration = new Configuration({ accessToken: this.user.token });
       const projectControllerApi = new ProjectControllerApi(configuration);
@@ -250,14 +352,16 @@ export default {
       }
     },
 
-    async removeUser(projectId, userId) {
-      console.log('removeUserFromProject called with:', { projectId, userId });
+    async removeUser(userId) {
+      //console.log('removeUserFromProject called with:', { projectId, userId });
 
       const configuration = new Configuration({ accessToken: this.user.token });
       const projectControllerApi = new ProjectControllerApi(configuration);
 
       try {
-        const requestBody = { projectId, userId };
+        const requestBody = {
+          projectId: Number(this.projectId),
+          userId: userId };
 
         await projectControllerApi.deleteUserFromProject({ userAndProjectRequestBody: requestBody });
 
@@ -277,34 +381,43 @@ export default {
       }
     },
 
-    uploadFile() {
-      if (!this.selectedFile)
-        return;
+    async uploadFile() {
+      if (!this.selectedFile) return;
+
       const formData = new FormData();
       formData.append("file", this.selectedFile);
 
-      fetch(`http://localhost:8080/api/projects/${this.projectId}/files`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${this.user.token}`,
-        },
-        body: formData,
-      });
+      try {
+        const response = await fetch(`http://localhost:8080/api/projects/${this.projectId}/files`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${this.user.token}`,
+          },
+          body: formData,
+        });
 
-      // const uploadFileRequest: UploadFileRequest = {
-      //   file: formData,
-      // };
-      // const configuration = new Configuration({ accessToken: this.user.token });
-      // const apiController = new FilesControllerApi(configuration)
+        if (response.ok) {
+          alert("Plik został dodany pomyślnie!");
+          this.selectedFile = null;
+          await this.getProjectFiles();
+        } else {
+          alert("Błąd podczas przesyłania pliku.");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
 
-      // apiController.uploadFile({projectId: this.projectId, uploadFileRequest: uploadFileRequest})
-      // this.selectedFile = null
+
+    openFilePicker() {
+      this.$refs.fileInput.click();
     },
 
     onFileChange(event: Event) {
       const input = event.target as HTMLInputElement;
       if (input.files?.length) {
         this.selectedFile = input.files[0];
+        this.uploadFile();
       }
     },
 
@@ -332,12 +445,6 @@ export default {
 
 <template>
   <div class="details-main">
-  <button @click="uploadFile">Dodaj plik</button>
-  <input
-    type="file"
-    ref="fileInput"
-    @change="onFileChange"
-  />
 
   <h2 class="title">Szczegóły projektu</h2>
   <div class="project-details" v-if="project">
@@ -413,7 +520,57 @@ export default {
 
 
       </div>
-    </div>
+
+      <div class="row">
+        <div class="label">Pliki</div>
+        <div class="value">
+          <div class="add-button" style="margin-left: auto; margin-bottom: 1vmin" @click="openFilePicker">+</div>
+          <ul class="file-list">
+            <li
+                v-for="file in files"
+                :key="file.filename"
+                class="file-item"
+                @mouseenter="hoveredFileId = file.id"
+                @mouseleave="hoveredFileId = null"
+
+            >
+              {{ truncateFilename(file.filename) }}
+              <span
+                  class="download-icon"
+                  v-if="hoveredFileId === file.id"
+                  @click="downloadFile(file)"
+              >
+<svg width="15px" height="15px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M23 22C23 22.5523 22.5523 23 22 23H2C1.44772 23 1 22.5523 1 22C1 21.4477 1.44772 21 2 21H22C22.5523 21 23 21.4477 23 22Z" fill="#ffffff"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.3099 18.6881C12.5581 19.3396 11.4419 19.3396 10.6901 18.6881L5.87088 14.5114C4.47179 13.2988 5.32933 11 7.18074 11L9.00001 11V3C9.00001 1.89543 9.89544 1 11 1L13 1C14.1046 1 15 1.89543 15 3L15 11H16.8193C18.6707 11 19.5282 13.2988 18.1291 14.5114L13.3099 18.6881ZM11.3451 16.6091C11.7209 16.9348 12.2791 16.9348 12.6549 16.6091L16.8193 13H14.5C13.6716 13 13 12.3284 13 11.5V3L11 3V11.5C11 12.3284 10.3284 13 9.50001 13L7.18074 13L11.3451 16.6091Z" fill="#ffffff"/>
+</svg>
+  </span>
+              <span
+                  class="remove-icon"
+                  v-if="hoveredFileId === file.id"
+                  @click="removeFile(file)"
+              >
+    ×
+  </span>
+              <div class="upload-date">{{ new Date(file.uploadDate).toLocaleString('pl-PL', {
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })}}</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <input
+          type="file"
+          ref="fileInput"
+          style="display: none"
+          @change="onFileChange"
+      />
+
 
     <div class="bottom-panel">
     <div class="links back" @click="goBack">Powrót</div>
@@ -428,6 +585,7 @@ export default {
 
 
     <chat :user-list="users"></chat>
+  </div>
   </div>
   </div>
 </template>
@@ -487,6 +645,13 @@ li{
   border-radius: 4px;
 }
 
+.file-item{
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+}
+
+
 .remove-icon {
   cursor: pointer;
   color: white;
@@ -498,8 +663,30 @@ li{
   margin-left: 1vmin;
 }
 
+.download-icon{
+  cursor: pointer;
+  color: white;
+  background-color: #1B2A41;
+  width: 3vmin;
+  text-align: center;
+  border-radius: 1vmin;
+  font-weight: bold;
+  margin-left: 1vmin;
+}
+
 .member-item:hover .remove-icon {
   display: inline;
+}
+
+.file-list{
+  flex-direction: column;
+  overflow-y: scroll;
+  overflow: auto;
+  max-height: 240px;
+}
+
+.upload-date{
+  margin-left: auto;
 }
 
 .project-details {
@@ -510,11 +697,25 @@ li{
 
 .bottom-panel{
   display: flex;
+  margin-top: 1vmin;
+}
+
+.file-management{
+  display: flex;
+  flex-direction: column;
+  margin-top: 2vmin;
+  margin-bottom: 2vmin;
+
 }
 
 .title {
   font-size: 1.5rem;
   margin-bottom: 1rem;
   text-align: center;
+}
+
+.links.back {
+  margin-left: 0;
+  margin-right: auto;
 }
 </style>
